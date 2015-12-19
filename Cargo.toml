@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Huo Linhe <huolinhe@berrygenomics.com>"]
 
 [dependencies]
+libc = "0.2.4"
 
 [dependencies.unqlite-sys]
 version = "0.1.0"
