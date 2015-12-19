@@ -1,6 +1,1 @@
-extern crate libc;
-
-mod ffi;
-
-#[test]
-fn it_works() {}
+extern crate unqlite_sys;
