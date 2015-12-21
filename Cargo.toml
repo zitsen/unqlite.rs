@@ -12,4 +12,4 @@ keywords = ["unqlite", "kv", "nosql"]
 
 [dependencies]
 libc = "0.2.4"
-unqlite-sys = "0.1.0"
+unqlite-sys = "0.2.0"
