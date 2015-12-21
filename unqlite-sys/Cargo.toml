@@ -3,6 +3,13 @@ name = "unqlite-sys"
 version = "0.1.0"
 authors = ["Huo Linhe <huolinhe@berrygenomics.com>"]
 build = "build.rs"
+license = "MIT"
+readme  = "../README.md"
+homepage = "https://github.com/zitsen/unqlite.rs"
+repository = "https://github.com/zitsen/unqlite.rs.git"
+documentation = "http://zitsen.github.io/unqlite.rs/unqlite-sys/index.html"
+description = "Rust `unqlite` bindings."
+keywords = ["unqlite", "kv", "nosql"]
 
 [dependencies]
 libc = "0.2.4"
