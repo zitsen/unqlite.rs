@@ -25,7 +25,7 @@ deploy:
   provider: releases
   api_key:
     secure: smnmx51GBKE4eJjaSeG5a//BgRbojkPNvFYOXRg7dLMEupmVuC/Ul7gTyqmnf5Or8Fb+Eobx1ROVMPMXKF7H8AscmTra5AfzUj0lfXPpJf4DLqVlPgkf/RI4PjmwD8eRTyB8ZeyLOrDwL3wzLnjf0mVL2u9NMVHCApjFugYMCEoy3t27HHHHywrtf2jZEmt4VPWusl7w2R5kSbHUu7EGblCV6geMc/Q7igXxjL/vJpGzfEk29G6nnvClDv6PSwR3PaPvaafr9sUDI6MHX3WOU0Wv88YhvSpHfytWHBTUFPDk+dVJC8/USkRfc0zSG/lpUW6ujOKMH24qlxijA6AZmbwjd9nEIspkpKNJYoQo7WA3NG/Z76/l/KjTfXH4US2Is4iErY9sPoNp0YVGPPtLdgeWo9bYqOzuJqE9vWmnQiuCLIcXAxkNSW6O3YTFMCViP0lTxitkknFGZwxiUF9wbF6bA954U/sxDSUr5dE/X6piXW+SGNINcP8uHmrIGA2ddL1gwbJ0fRtbtwLGEqdSUguY62yvllDxUmk78ppZool2wJawjXNW127yKvvOIXPZ6oyjLYX+g9spzQjZIWtfK3vaNunfTUANuJ6jXaQjNxoNi+vnsnwiUmkOyu+WFWd6C3wRDfU5DJaIycd/O1kCPP9KS+xA8zq22Zw2h4ruyUw=
-  file: unqlite-$TRAVIS_TAG.crate
+  file: target/package/unqlite-$TRAVIS_TAG.crate
   on:
     tags: true
     all_branches: true
