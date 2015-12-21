@@ -1,0 +1,19 @@
+sudo: false
+language: rust
+rust:
+  - nightly
+  - beta
+  - stable
+before_script:
+  - |
+    pip install 'travis-cargo<0.2' --user
+script:
+  - |
+    cargo build &&
+    cargo test &&
+    travis-cargo --only stable doc -- &&
+    cargo build --no-default-features
+
+after_success:
+  - |
+    travis-cargo --only stable doc-upload
