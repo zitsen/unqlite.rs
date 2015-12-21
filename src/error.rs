@@ -1,4 +1,4 @@
-use ffi::*;
+use ffi::constants::*;
 use std::error;
 use std::fmt;
 

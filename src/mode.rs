@@ -1,4 +1,4 @@
-use ffi;
+use ffi::constants as ffi;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum OpenMode {

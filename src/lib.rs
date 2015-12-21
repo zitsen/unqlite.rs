@@ -4,8 +4,10 @@ extern crate libc;
 use std::mem;
 use std::ffi::CString;
 use libc::c_void;
+use ffi::constants::UNQLITE_OK;
 
 use error::*;
+
 pub use mode::*;
 #[allow(dead_code, non_camel_case_types)]mod error;
 #[allow(dead_code, non_camel_case_types)]mod mode;
@@ -19,7 +21,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 macro_rules! error_or {
     ($code: expr, $ok: expr) => {
         match $code {
-            ffi::UNQLITE_OK => Ok($ok),
+            UNQLITE_OK => Ok($ok),
             code => Err(Error::from(code))
         }
     }
