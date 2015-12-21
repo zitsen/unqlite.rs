@@ -4,16 +4,38 @@ rust:
   - nightly
   - beta
   - stable
+
 before_script:
-  - |
-    pip install 'travis-cargo<0.2' --user
+  - pip install 'travis-cargo<0.2' --user
+
 script:
-  - |
-    cargo build &&
-    cargo test &&
-    travis-cargo --only stable doc -- &&
-    cargo build --no-default-features
+  - cargo build --verbose
+  - cargo build --release
+  - cargo test
+  - travis-cargo --only stable doc --
+  - cargo build --no-default-features
 
 after_success:
-  - |
-    travis-cargo --only stable doc-upload
+  - travis-cargo --only stable doc-upload
+
+before_deploy:
+  - cargo package --verbose
+
+deploy:
+  provider: releases
+  api_key:
+    secure: smnmx51GBKE4eJjaSeG5a//BgRbojkPNvFYOXRg7dLMEupmVuC/Ul7gTyqmnf5Or8Fb+Eobx1ROVMPMXKF7H8AscmTra5AfzUj0lfXPpJf4DLqVlPgkf/RI4PjmwD8eRTyB8ZeyLOrDwL3wzLnjf0mVL2u9NMVHCApjFugYMCEoy3t27HHHHywrtf2jZEmt4VPWusl7w2R5kSbHUu7EGblCV6geMc/Q7igXxjL/vJpGzfEk29G6nnvClDv6PSwR3PaPvaafr9sUDI6MHX3WOU0Wv88YhvSpHfytWHBTUFPDk+dVJC8/USkRfc0zSG/lpUW6ujOKMH24qlxijA6AZmbwjd9nEIspkpKNJYoQo7WA3NG/Z76/l/KjTfXH4US2Is4iErY9sPoNp0YVGPPtLdgeWo9bYqOzuJqE9vWmnQiuCLIcXAxkNSW6O3YTFMCViP0lTxitkknFGZwxiUF9wbF6bA954U/sxDSUr5dE/X6piXW+SGNINcP8uHmrIGA2ddL1gwbJ0fRtbtwLGEqdSUguY62yvllDxUmk78ppZool2wJawjXNW127yKvvOIXPZ6oyjLYX+g9spzQjZIWtfK3vaNunfTUANuJ6jXaQjNxoNi+vnsnwiUmkOyu+WFWd6C3wRDfU5DJaIycd/O1kCPP9KS+xA8zq22Zw2h4ruyUw=
+  file: unqlite-$TRAVIS_TAG.crate
+  on:
+    tags: true
+    all_branches: true
+    repo: zitsen/unqlite.rs
+    condition: "$TRAVIS_RUST_VERSION = stable"
+
+after_deploy:
+  - cargo publish --token "$CRATESIO_TOKEN"
+
+env:
+  global:
+  - secure: VbLfHRPv/jTnGWiUjwK/s9AmHvNH6cEUcUjJP8kv8OLwkLhfykZS+kjHPH1PsKC2MU26PJ6jHRGX+zMuvYxLzZ87F1cC6x+afkvTfNlCEWqbSmZ2g51zxh9iX1rDeLQsi6EPcDedl1Q+DblacKLSB25kd8bGCKaZUAjG2E0qXT0W4eeWXRHu4izZYGscRTWElI03BGq4bvu6V92XlPekFi4gdQzs5cbIUnV0XMLE5IXF7Rv5Ln67QY6HQ2paX25qBNzgRmnwn+Ozwzq3IJl1JvK7hP6UTgB7RyUH7vJykE81jrCJn3uL68GjO9Cu22IJb7MKhF3rVOOUatxoqj45CyveOSzwbP/X/SmZUjeN21jP8/fveVVODo0bJInmrLoh0oAi7VkS9tOXXhB2w5nHxDDFAKrU+7rOBvpMx+Pwby42qWsC3pTCPxnT8KeQv6FLRVqdcG+AHYTAlzC7UVF0RUlHmJrDl4CT5V0thmlVoi693WlxVsFkrQFeWcoMFqZzoiEdcB7BYW6Q3NoyXP13KKUfLXSz+l/7FBlBw7fPrEUGhNrKt6CV/6CkKj8MJBXe62myxZ+zBrTIpI9LHCAuQ2V5t3fwyAbPoM0Cz2mQ0UXcmolUSVTlSHOoW29Bwev9GTJTlzsydbmOuPQKucIWzYIkqT46mWiqekn8EnTUrZ8=
+  - secure: EiR4+bRBUEDcC9JWnnmrudRO2y6uuYAVCCL72jBhy1wq88wuFnRXV7Mk9mLiynnE5DdRFUM9wjzGzO/sw1dWyeuSsPZSErTjXqeX3Hyk4wHTB6pRZYeTjchmmvAZVzJymx/CaBLGl415i3d+atq2z9B4UmYTHGyC7CHMKA5uRPn/dn+TMnkf77VXr942v+xXMZqVR133mUcOPlQ9vz4RwYqu+vjkFpO+YWkapxU3OMdhJVcchDy/izrtg+bZ2k8+M3iWukyElzd29nSulT+YXSWVLcUhngSlYQgSQzdooC4di11Qra+wzWYkzpVJLtYfH7AsNl17n3OeRJoknWwalJjhjz/Rt05vx0AGK5b2409kPhNxPNXnwaKP3+EP4UKzOA5m4F60eaSxs+6Qz8YOUJourEiCLqRWHHmV0pUFPLwitrUNP2uDHgo9RqCLbe2G2JBwmE3Q2XvDwqd/dYhXbOF4LmpC9S1eDWQYdugnTKoTPsBcYMD4nC5fvDue+rCW3F21ZrDF5P8G8T/9a3D+kK7UnGWTmNf92I0M6ORjI3G63KDLNa2m02yDcQoFPXA9Fj5ektM0jYZEoLCF2nlsY1MfAW4qnko0eO+G3ecdESrLUGV111MPIarztW9GiNiDegMEfrv9wq1CEG7C9vM0Wrj0gcJtmRfiuRm+cAzINvo=
