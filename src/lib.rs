@@ -7,8 +7,7 @@ use libc::c_void;
 
 use error::*;
 pub use mode::*;
-#[allow(dead_code, non_camel_case_types)]
-mod error;
+#[allow(dead_code, non_camel_case_types)]mod error;
 #[allow(dead_code, non_camel_case_types)]mod mode;
 
 pub struct Unqlite {
@@ -73,6 +72,9 @@ impl Unqlite {
         error_or!(self.kv_delete_nonchecked(key), ())
     }
 
+    pub fn kv_contains(&self, key: &[u8]) -> bool {
+        self.kv_fetch_length(key).map(|_x| true).unwrap_or(false)
+    }
     pub fn kv_fetch_length(&self, key: &[u8]) -> Result<usize> {
         let mut len = 0usize;
         let raw_mut = &mut len as *mut usize;
@@ -111,21 +113,27 @@ mod tests {
     use super::*;
     #[test]
     fn kv() {
-        let mut rc = Unqlite::open("test.db", UNQLITE_OPEN_CREATE).unwrap();
-        println!("kv store");
-        rc.kv_store(b"msg", b"Hello, ").unwrap();
-        let len = rc.kv_fetch_length(b"msg").unwrap();
-        assert_eq!(len, 7);
-        println!("kv append");
-        rc.kv_append(b"msg", b"world!").unwrap();
-        println!("kv fetch value length");
-        let len = rc.kv_fetch_length(b"msg").unwrap();
-        println!("fetched length {}", len);
-        assert_eq!(len, 13);
-        let mut vec: Vec<u8> = Vec::with_capacity(len);
-        unsafe { vec.set_len(len) }
-        rc.kv_fetch(b"msg", &mut *vec).unwrap();
-        //rc.kv_fetch(b"msg", vec.as_mut_slice()).unwrap();
-        assert_eq!(String::from_utf8(vec).unwrap(), String::from("Hello, world!"));
+        let filename = "test.db";
+        {
+            let mut rc = Unqlite::open(filename, UNQLITE_OPEN_CREATE).unwrap();
+            println!("kv store");
+            rc.kv_store(b"msg", b"Hello, ").unwrap();
+            let len = rc.kv_fetch_length(b"msg").unwrap();
+            assert_eq!(len, 7);
+            assert_eq!(rc.kv_contains(b"msg"), true);
+            assert_eq!(rc.kv_contains(b"msg2"), false);
+            println!("kv append");
+            rc.kv_append(b"msg", b"world!").unwrap();
+            println!("kv fetch value length");
+            let len = rc.kv_fetch_length(b"msg").unwrap();
+            println!("fetched length {}", len);
+            assert_eq!(len, 13);
+            let mut vec: Vec<u8> = Vec::with_capacity(len);
+            unsafe { vec.set_len(len) }
+            rc.kv_fetch(b"msg", &mut *vec).unwrap();
+            assert_eq!(String::from_utf8(vec).unwrap(),
+                       String::from("Hello, world!"));
+        }
+        ::std::fs::remove_file(filename).unwrap();
     }
 }

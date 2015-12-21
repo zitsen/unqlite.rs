@@ -129,7 +129,10 @@ fn code_to_str(code: i32) -> &'static str {
         UNQLITE_BUSY => "The database file is locked",
         UNQLITE_DONE => "Operation done",
         UNQLITE_PERM => "Permission error",
-        UNQLITE_NOTIMPLEMENTED => "Method not implemented by the underlying Key/Value storage engine",
+        UNQLITE_NOTIMPLEMENTED => {
+            "Method not implemented by the underlying \
+             Key/Value storage engine"
+        }
         UNQLITE_NOTFOUND => "No such record",
         UNQLITE_NOOP => "No such method",
         UNQLITE_INVALID => "Invalid parameter",
