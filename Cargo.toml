@@ -11,5 +11,5 @@ description = "Rust `unqlite` library wrapper."
 keywords = ["unqlite", "kv", "nosql"]
 
 [dependencies]
-libc = "0.2.4"
-unqlite-sys = "0.2.0"
+libc = "0.2"
+unqlite-sys = { version = "0.3", features = [ "enable-threads" ] }

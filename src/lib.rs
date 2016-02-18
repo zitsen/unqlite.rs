@@ -4,11 +4,12 @@ extern crate libc;
 use std::mem;
 use std::ffi::CString;
 use libc::c_void;
-use ffi::constants::UNQLITE_OK;
 
-use error::*;
+pub use error::*;
 
 pub use mode::*;
+
+#[macro_use]
 #[allow(dead_code, non_camel_case_types)]mod error;
 #[allow(dead_code, non_camel_case_types)]mod mode;
 
@@ -16,16 +17,10 @@ pub struct Unqlite {
     db: *mut ffi::unqlite,
 }
 
-pub type Result<T> = std::result::Result<T, Error>;
+unsafe impl Send for Unqlite { }
+unsafe impl Sync for Unqlite { }
 
-macro_rules! error_or {
-    ($code: expr, $ok: expr) => {
-        match $code {
-            UNQLITE_OK => Ok($ok),
-            code => Err(Error::from(code))
-        }
-    }
-}
+
 impl Default for Unqlite {
     fn default() -> Unqlite {
         Unqlite { db: unsafe { mem::uninitialized() } }
@@ -33,10 +28,20 @@ impl Default for Unqlite {
 }
 
 impl Unqlite {
+    pub fn enable_multithreads() {
+        unsafe {
+            ffi::unqlite_lib_config(ffi::constants::UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI);
+            ffi::unqlite_lib_init();
+        }
+    }
     pub fn open(filename: &str, mode: OpenMode) -> Result<Unqlite> {
         unsafe {
             let mut unqlite = Unqlite::default();
+            println!("filename: {}", filename);
             let filename = try!(CString::new(filename));
+            ffi::unqlite_lib_config(ffi::constants::UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI);
+            ffi::unqlite_lib_init();
+            assert_eq!(ffi::unqlite_lib_is_threadsafe(), 1);
             error_or!(ffi::unqlite_open(&mut unqlite.db, filename.as_ptr(), mode.into()),
                       unqlite)
         }
@@ -113,7 +118,8 @@ impl Drop for Unqlite {
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[test]
+    use std::sync::{Arc, Mutex};
+    use std::thread;
     fn kv() {
         let filename = "test.db";
         {
@@ -137,5 +143,28 @@ mod tests {
                        String::from("Hello, world!"));
         }
         ::std::fs::remove_file(filename).unwrap();
+    }
+
+    #[test]
+    fn threads_kv() {
+        kv();
+        let is_threadsafe = unsafe {
+            ::ffi::unqlite_lib_is_threadsafe()
+        };
+        assert_eq!(is_threadsafe, 1);
+        let rc = Unqlite::open(":mem:", UNQLITE_OPEN_CREATE).unwrap();
+        let uq = Arc::new(Mutex::new(rc));
+        for _ in 0..100u64 {
+            let uq = uq.clone();
+
+            thread::spawn(move || {
+                let mut uq = uq.lock().unwrap();
+                if uq.kv_contains(b"msg") {
+                    uq.kv_append(b"msg", b", apend").unwrap();
+                } else {
+                    uq.kv_store(b"msg", b"hello").unwrap();
+                }
+            });
+        }
     }
 }

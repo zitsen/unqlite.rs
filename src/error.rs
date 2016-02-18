@@ -1,6 +1,19 @@
 use ffi::constants::*;
 use std::error;
 use std::fmt;
+use std::result;
+
+pub type Result<T> = result::Result<T, Error>;
+
+#[macro_export]
+macro_rules! error_or {
+    ($code: expr, $ok: expr) => {
+        match $code {
+            ::ffi::constants::UNQLITE_OK => Ok($ok),
+            code => Err(Error::from(code))
+        }
+    }
+}
 
 #[derive(Debug)]
 pub enum Error {
@@ -71,7 +84,7 @@ pub struct UnqliteFailure {
 
 impl UnqliteFailure {
     pub fn new(result_code: i32) -> UnqliteFailure {
-        let code = match result_code & 0xff {
+        let code = match result_code {
             UNQLITE_NOMEM => ErrorCode::UNQLITE_NOMEM,
             UNQLITE_ABORT => ErrorCode::UNQLITE_ABORT,
             UNQLITE_IOERR => ErrorCode::UNQLITE_IOERR,
