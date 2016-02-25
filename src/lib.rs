@@ -27,11 +27,17 @@ impl Default for Unqlite {
     }
 }
 
+static THREADS_ENABLED: bool = false;
+
 impl Unqlite {
     pub fn enable_multithreads() {
-        unsafe {
-            ffi::unqlite_lib_config(ffi::constants::UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI);
-            ffi::unqlite_lib_init();
+        if THREADS_ENABLED {
+            return
+        } else {
+            unsafe {
+                ffi::unqlite_lib_config(ffi::constants::UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI);
+                ffi::unqlite_lib_init();
+            }
         }
     }
     pub fn open(filename: &str, mode: OpenMode) -> Result<Unqlite> {
@@ -39,8 +45,7 @@ impl Unqlite {
             let mut unqlite = Unqlite::default();
             println!("filename: {}", filename);
             let filename = try!(CString::new(filename));
-            ffi::unqlite_lib_config(ffi::constants::UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI);
-            ffi::unqlite_lib_init();
+            Self::enable_multithreads();
             assert_eq!(ffi::unqlite_lib_is_threadsafe(), 1);
             error_or!(ffi::unqlite_open(&mut unqlite.db, filename.as_ptr(), mode.into()),
                       unqlite)
