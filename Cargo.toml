@@ -12,4 +12,13 @@ keywords = ["unqlite", "kv", "nosql"]
 
 [dependencies]
 libc = "0.2"
-unqlite-sys = { version = "0.3.2", features = ["enable-threads"] }
+unqlite-sys = "0.3.2"
+
+[features]
+# For thread-safe
+enable-threads = [ "unqlite-sys/enable-threads" ]
+# Other features
+jx9-disable-builtin-func = [ "unqlite-sys/jx9-disable-builtin-func" ]
+jx9-enable-math-func = [ "unqlite-sys/jx9-enable-math-func" ]
+jx9-disable-disk-io = [ "unqlite-sys/jx9-disable-disk-io" ]
+enable-jx9-hash-io = [ "unqlite-sys/enable-jx9-hash-io" ]
