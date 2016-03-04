@@ -7,12 +7,18 @@ pub type Result<T> = result::Result<T, Error>;
 
 #[macro_export]
 macro_rules! error_or {
+    ($code: expr) => {
+        match $code {
+            ::ffi::constants::UNQLITE_OK => Ok(()),
+            code => Err(::Error::from(code)),
+        }
+    };
     ($code: expr, $ok: expr) => {
         match $code {
             ::ffi::constants::UNQLITE_OK => Ok($ok),
-            code => Err(Error::from(code))
+            code => Err(::Error::from(code)),
         }
-    }
+    };
 }
 
 #[derive(Debug)]
@@ -41,9 +47,9 @@ impl From<i32> for Error {
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            &Error::UnqliteFailure(ref err) => err.fmt(f),
-            &Error::NulError(ref err) => err.fmt(f),
+        match *self {
+            Error::UnqliteFailure(ref err) => err.fmt(f),
+            Error::NulError(ref err) => err.fmt(f),
         }
     }
 }
