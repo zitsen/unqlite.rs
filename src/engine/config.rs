@@ -96,7 +96,7 @@ impl<'config> UnQlite {
     }
 }
 
-fn from_chars_to_string(p: *mut ::libc::c_char) -> String {
+fn from_chars_to_cstring(p: *mut ::libc::c_char) -> CString {
     unsafe {
         let len = ::libc::strlen(p);
         let (_, vec) = (0..len).fold((p, Vec::new()), |(p, mut vec), _| {
@@ -105,8 +105,12 @@ fn from_chars_to_string(p: *mut ::libc::c_char) -> String {
             let p = p.offset(1);
             (p, vec)
         });
-        CString::from_vec_unchecked(vec).into_string().unwrap()
+        CString::from_vec_unchecked(vec)
     }
+}
+
+fn from_chars_to_string(p: *mut ::libc::c_char) -> String {
+   from_chars_to_cstring(p).into_string().unwrap()
 }
 
 
