@@ -2,8 +2,10 @@ use super::UnQlite;
 use std::ffi::CString;
 use std::ptr;
 use std::mem;
+use std::convert::From;
 use ffi::unqlite_config;
-use ffi::constants::{UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_GET_KV_NAME,
+use ffi::constants::{UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG,
+                     UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_JX9_ERR_LOG,
                      UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE};
 
 /// This part of functions is about UnQlite's config options.
@@ -51,6 +53,37 @@ impl<'config> UnQlite {
         self
     }
 
+    /// The database error log is stored in an internal buffer. When something goes wrong during a
+    /// commit, rollback, store, append operation, a human-readable error message is generated to
+    /// help clients diagnostic the problem. This option can be used to point to that buffer.
+    pub fn err_log(&self) -> Option<String> {
+        unsafe {
+            let log: *mut ::libc::c_char = mem::uninitialized();
+            let len: i32 = mem::uninitialized();
+            error_or!(unqlite_config(self.db, UNQLITE_CONFIG_ERR_LOG, &log, &len)).unwrap();
+            if len > 0 {
+                Some(from_chars_to_string(log))
+            } else {
+                None
+            }
+        }
+    }
+
+    /// When something goes wrong during compilation of the target Jx9 script due to an erroneous
+    /// Jx9 code, the compiler error log is redirected to an internal buffer. This option can be
+    /// used to point to that buffer.
+    pub fn jx9_err_log(&self) -> Option<String> {
+        unsafe {
+            let log: *mut ::libc::c_char = mem::uninitialized();
+            let len: i32 = mem::uninitialized();
+            error_or!(unqlite_config(self.db, UNQLITE_CONFIG_JX9_ERR_LOG, &log, &len)).unwrap();
+            if len > 0 {
+                Some(from_chars_to_string(log))
+            } else {
+                None
+            }
+        }
+    }
     /// Extract the name of the underlying Key/Value storage engine.
     ///
     /// Here's some useful names to know: Hash, Mem, R+Tree, LSM, etc.
@@ -58,17 +91,24 @@ impl<'config> UnQlite {
         unsafe {
             let kv_name: *mut ::libc::c_char = mem::uninitialized();
             error_or!(unqlite_config(self.db, UNQLITE_CONFIG_GET_KV_NAME, &kv_name)).unwrap();
-            let len = ::libc::strlen(kv_name);
-            let (_, vec) = (0..len).fold((kv_name, Vec::new()), |(kv, mut vec), _| {
-                let u: u8 = ptr::read(kv) as u8;
-                vec.push(u);
-                let kv = kv.offset(1);
-                (kv, vec)
-            });
-            CString::from_vec_unchecked(vec).into_string().unwrap()
+            from_chars_to_string(kv_name)
         }
     }
 }
+
+fn from_chars_to_string(p: *mut ::libc::c_char) -> String {
+    unsafe {
+        let len = ::libc::strlen(p);
+        let (_, vec) = (0..len).fold((p, Vec::new()), |(p, mut vec), _| {
+            let u: u8 = ptr::read(p) as u8;
+            vec.push(u);
+            let p = p.offset(1);
+            (p, vec)
+        });
+        CString::from_vec_unchecked(vec).into_string().unwrap()
+    }
+}
+
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
@@ -80,5 +120,8 @@ mod tests {
         let unqlite = UnQlite::create_in_memory().max_page_cache(512000000);
         let kv_name = unqlite.kv_name();
         assert_eq!(kv_name, String::from("mem"));
+        assert_eq!(unqlite.err_log(), None);
+        let unqlite = UnQlite::create("/root/test.db");
+        assert_eq!(unqlite.err_log(), None);
     }
 }
