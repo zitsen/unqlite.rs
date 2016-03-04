@@ -143,9 +143,11 @@ impl Drop for UnQlite {
 }
 
 pub use self::config::*;
+pub use self::util::*;
 
 mod openmode;
 mod config;
+mod util;
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
