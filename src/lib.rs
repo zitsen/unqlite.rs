@@ -1,3 +1,5 @@
+#![feature(convert)]
+
 extern crate unqlite_sys as ffi;
 extern crate libc;
 

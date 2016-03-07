@@ -110,7 +110,7 @@ fn from_chars_to_cstring(p: *mut ::libc::c_char) -> CString {
 }
 
 fn from_chars_to_string(p: *mut ::libc::c_char) -> String {
-   from_chars_to_cstring(p).into_string().unwrap()
+    from_chars_to_cstring(p).into_string().unwrap()
 }
 
 
