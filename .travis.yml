@@ -4,6 +4,11 @@ rust:
 - nightly
 - beta
 - stable
+
+matrix:
+    allow_failures:
+      - rust: beta
+      - rust: stable
 before_script:
 - pip install 'travis-cargo<0.2' --user
 script:
@@ -12,6 +17,8 @@ script:
 - cargo test
 - travis-cargo --only stable doc --
 - cargo build --no-default-features
+- cargo test --no-default-features
+- cargo test --features enable-threads
 after_success:
 - travis-cargo --only stable doc-upload
 before_deploy:
