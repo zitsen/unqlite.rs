@@ -149,7 +149,7 @@ macro_rules! _components {
     }
 }
 
-_components!(openmode, config, util, transaction);
+_components!(openmode, config, util, transaction, kv_store);
 
 pub use self::openmode::OpenMode;
 
