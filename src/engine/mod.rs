@@ -141,17 +141,14 @@ impl Drop for UnQlite {
     }
 }
 
-macro_rules! _components {
-    ($($i: ident),*) => {
-        $(
-            mod $i;
-         )*
-    }
-}
-
-_components!(openmode, config, util, transaction, kv_store);
+mod openmode;
+mod config;
+mod util;
+mod transaction;
+mod kv_store;
 
 pub use self::openmode::OpenMode;
+pub use self::util::Mmap;
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]

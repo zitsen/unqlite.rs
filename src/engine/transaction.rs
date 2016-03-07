@@ -25,7 +25,7 @@ impl<'transaction> UnQlite {
     /// `disable_auto_commit()` option is set. In which case, you should manually call
     /// `commit()`. Otherwise, the database is rolled back.
     ///
-    /// **Tip**: For maximum concurrency, it is recommended that you commit your transaction manually
+    /// *Tip*: For maximum concurrency, it is recommended that you commit your transaction manually
     /// as soon as you have no more insertions. Also, for very large insertions (More than 20000),
     /// you should call `commit()` periodically to free some memory (A new transaction is
     /// started automatically in the next insertion).
