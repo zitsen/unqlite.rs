@@ -144,13 +144,14 @@ impl Drop for UnQlite {
 macro_rules! _components {
     ($($i: ident),*) => {
         $(
-            pub use self::$i::*;
             mod $i;
          )*
     }
 }
 
 _components!(openmode, config, util, transaction);
+
+pub use self::openmode::OpenMode;
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
