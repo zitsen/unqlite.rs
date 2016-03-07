@@ -2,8 +2,7 @@ use std::mem;
 use std::ffi::CString;
 use ffi::{unqlite_close, unqlite_open};
 
-pub use self::openmode::*;
-///
+/// UnQlite database entity.
 pub struct UnQlite {
     db: *mut ::ffi::unqlite,
 }
@@ -142,14 +141,16 @@ impl Drop for UnQlite {
     }
 }
 
-pub use self::config::*;
-pub use self::util::*;
-pub use self::transaction::*;
+macro_rules! _components {
+    ($($i: ident),*) => {
+        $(
+            pub use self::$i::*;
+            mod $i;
+         )*
+    }
+}
 
-mod openmode;
-mod config;
-mod util;
-mod transaction;
+_components!(openmode, config, util, transaction);
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
