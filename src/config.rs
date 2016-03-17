@@ -28,7 +28,10 @@ impl<'config> UnQlite {
     ///
     /// This is a simple hint, UnQLite is not forced to honor it.
     pub fn max_page_cache(self, max: u32) -> Self {
-        error_or!(unsafe { unqlite_config(self.db, UNQLITE_CONFIG_MAX_PAGE_CACHE, max) }).unwrap();
+        error_or!(unsafe {
+            unqlite_config(self.as_raw_mut_ptr(), UNQLITE_CONFIG_MAX_PAGE_CACHE, max)
+        })
+            .unwrap();
         self
     }
 
@@ -40,7 +43,10 @@ impl<'config> UnQlite {
     /// rolled back and you should call `unqlite_commit()` manually to commit all database changes.
     ///
     pub fn disable_auto_commit(self) -> Self {
-        error_or!(unsafe { unqlite_config(self.db, UNQLITE_CONFIG_DISABLE_AUTO_COMMIT) }).unwrap();
+        error_or!(unsafe {
+            unqlite_config(self.as_raw_mut_ptr(), UNQLITE_CONFIG_DISABLE_AUTO_COMMIT)
+        })
+            .unwrap();
         self
     }
 
@@ -48,7 +54,11 @@ impl<'config> UnQlite {
     ///
     /// *This option is reserved for future usage.*
     pub fn kv_engine(self, name: CString) -> Self {
-        error_or!(unsafe { unqlite_config(self.db, UNQLITE_CONFIG_KV_ENGINE, name.into_raw()) })
+        error_or!(unsafe {
+            unqlite_config(self.as_raw_mut_ptr(),
+                           UNQLITE_CONFIG_KV_ENGINE,
+                           name.into_raw())
+        })
             .unwrap();
         self
     }
@@ -60,7 +70,8 @@ impl<'config> UnQlite {
         unsafe {
             let log: *mut ::libc::c_char = mem::uninitialized();
             let len: i32 = mem::uninitialized();
-            error_or!(unqlite_config(self.db, UNQLITE_CONFIG_ERR_LOG, &log, &len)).unwrap();
+            error_or!(unqlite_config(self.as_raw_mut_ptr(), UNQLITE_CONFIG_ERR_LOG, &log, &len))
+                .unwrap();
             if len > 0 {
                 Some(from_chars_to_string(log))
             } else {
@@ -76,7 +87,11 @@ impl<'config> UnQlite {
         unsafe {
             let log: *mut ::libc::c_char = mem::uninitialized();
             let len: i32 = mem::uninitialized();
-            error_or!(unqlite_config(self.db, UNQLITE_CONFIG_JX9_ERR_LOG, &log, &len)).unwrap();
+            error_or!(unqlite_config(self.as_raw_mut_ptr(),
+                                     UNQLITE_CONFIG_JX9_ERR_LOG,
+                                     &log,
+                                     &len))
+                .unwrap();
             if len > 0 {
                 Some(from_chars_to_string(log))
             } else {
@@ -90,7 +105,8 @@ impl<'config> UnQlite {
     pub fn kv_name(&self) -> String {
         unsafe {
             let kv_name: *mut ::libc::c_char = mem::uninitialized();
-            error_or!(unqlite_config(self.db, UNQLITE_CONFIG_GET_KV_NAME, &kv_name)).unwrap();
+            error_or!(unqlite_config(self.as_raw_mut_ptr(), UNQLITE_CONFIG_GET_KV_NAME, &kv_name))
+                .unwrap();
             from_chars_to_string(kv_name)
         }
     }

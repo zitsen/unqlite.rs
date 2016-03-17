@@ -1,4 +1,5 @@
 #![feature(convert)]
+#![feature(unique)]
 
 extern crate unqlite_sys as ffi;
 extern crate libc;
@@ -11,20 +12,15 @@ pub use error::*;
 use std::mem;
 use std::ffi::CString;
 use ffi::{unqlite_close, unqlite_open};
+use std::ptr::Unique;
 
 /// UnQlite database entity.
 pub struct UnQlite {
-    db: *mut ::ffi::unqlite,
+    db: Unique<::ffi::unqlite>,
 }
 
 unsafe impl Send for UnQlite {}
 unsafe impl Sync for UnQlite {}
-
-impl Default for UnQlite {
-    fn default() -> UnQlite {
-        UnQlite { db: unsafe { mem::uninitialized() } }
-    }
-}
 
 impl<'open> UnQlite {
     /// Create UnQlite database at specific path.
@@ -36,11 +32,11 @@ impl<'open> UnQlite {
     #[inline]
     fn open<P: AsRef<str>>(filename: P, mode: OpenMode) -> ::Result<UnQlite> {
         unsafe {
-            let mut unqlite = UnQlite::default();
+            let mut db: *mut ::ffi::unqlite = mem::uninitialized();
             let filename = filename.as_ref();
             let filename = try!(CString::new(filename));
-            error_or!(unqlite_open(&mut unqlite.db, filename.as_ptr(), mode.into()),
-                      unqlite)
+            error_or!(unqlite_open(&mut db, filename.as_ptr(), mode.into()),
+                      UnQlite { db: Unique::new(db) })
         }
     }
 
@@ -141,7 +137,11 @@ impl<'open> UnQlite {
     }
 
     fn close(&mut self) -> ::Result<()> {
-        unsafe { error_or!(unqlite_close(self.db)) }
+        unsafe { error_or!(unqlite_close(self.as_raw_mut_ptr())) }
+    }
+
+    unsafe fn as_raw_mut_ptr(&self) -> *mut ::ffi::unqlite {
+        *self.db
     }
 }
 

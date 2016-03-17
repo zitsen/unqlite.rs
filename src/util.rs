@@ -12,7 +12,9 @@ impl<'util> UnQlite {
     pub fn random_string(&self, buf_size: u32) -> Vec<u8> {
         unsafe {
             let mut vec: Vec<u8> = Vec::with_capacity(buf_size as usize);
-            error_or!(unqlite_util_random_string(self.db, vec.as_mut_ptr() as *mut i8, buf_size))
+            error_or!(unqlite_util_random_string(self.as_raw_mut_ptr(),
+                                                 vec.as_mut_ptr() as *mut i8,
+                                                 buf_size))
                 .unwrap();
             vec
         }
@@ -22,7 +24,7 @@ impl<'util> UnQlite {
     ///
     /// It will return a 32-bit unsigned integer between 0 and 0xFFFFFFFF.
     pub fn random_num(&self) -> u32 {
-        unsafe { unqlite_util_random_num(self.db) }
+        unsafe { unqlite_util_random_num(self.as_raw_mut_ptr()) }
     }
 
     /// Memory-mapped file

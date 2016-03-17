@@ -12,7 +12,7 @@ impl<'transaction> UnQlite {
     /// request a store, delete or an append operation.
     ///
     pub fn begin(&mut self) -> ::Result<()> {
-        error_or!(unsafe { unqlite_begin(self.db) })
+        error_or!(unsafe { unqlite_begin(self.as_raw_mut_ptr()) })
     }
 
     /// Commit all changes to the database.
@@ -30,7 +30,7 @@ impl<'transaction> UnQlite {
     /// you should call `commit()` periodically to free some memory (A new transaction is
     /// started automatically in the next insertion).
     pub fn commit(&mut self) -> ::Result<()> {
-        match error_or!(unsafe { unqlite_commit(self.db) }) {
+        match error_or!(unsafe { unqlite_commit(self.as_raw_mut_ptr()) }) {
             Ok(_) => Ok(()),
             Err(err) => {
                 let _ = self.rollback();
@@ -46,6 +46,6 @@ impl<'transaction> UnQlite {
     /// database, deletion of the journal file, etc.). Otherwise this routine is a no-op.
     ///
     fn rollback(&mut self) -> ::Result<()> {
-        error_or!(unsafe { unqlite_rollback(self.db) })
+        error_or!(unsafe { unqlite_rollback(self.as_raw_mut_ptr()) })
     }
 }

@@ -23,7 +23,7 @@ impl<'kv_store> UnQlite {
         let key = key.as_ref();
         let value = value.as_ref();
         error_or!(unsafe {
-            unqlite_kv_store(self.db,
+            unqlite_kv_store(self.as_raw_mut_ptr(),
                              key.as_ptr() as *const c_void,
                              key.len() as i32,
                              value.as_ptr() as *const c_void,
@@ -40,7 +40,7 @@ impl<'kv_store> UnQlite {
         let key = key.as_ref();
         let value = value.as_ref();
         error_or!(unsafe {
-            unqlite_kv_append(self.db,
+            unqlite_kv_append(self.as_raw_mut_ptr(),
                               key.as_ptr() as *const c_void,
                               key.len() as i32,
                               value.as_ptr() as *const c_void,
@@ -55,7 +55,7 @@ impl<'kv_store> UnQlite {
     /// unqlite_kv_cursor_delete_entry().
     pub fn kv_delete<K: AsRef<[u8]>>(&mut self, key: K) -> ::Result<()> {
         error_or!(unsafe {
-            unqlite_kv_delete(self.db,
+            unqlite_kv_delete(self.as_raw_mut_ptr(),
                               key.as_ref().as_ptr() as *const c_void,
                               key.as_ref().len() as i32)
         })
@@ -71,7 +71,7 @@ impl<'kv_store> UnQlite {
         let key = key.as_ref();
         let mut len = 0i64;
         error_or!(unsafe {
-            unqlite_kv_fetch(self.db,
+            unqlite_kv_fetch(self.as_raw_mut_ptr(),
                              key.as_ptr() as *const c_void,
                              key.len() as i32,
                              ptr::null_mut(),
@@ -95,7 +95,7 @@ impl<'kv_store> UnQlite {
         let ptr = buf.as_mut_ptr();
         unsafe {
             mem::forget(buf);
-            error_or!(unqlite_kv_fetch(self.db,
+            error_or!(unqlite_kv_fetch(self.as_raw_mut_ptr(),
                                        key.as_ptr() as *const c_void,
                                        key.len() as i32,
                                        ptr as *mut c_void,
@@ -114,7 +114,7 @@ impl<'kv_store> UnQlite {
                                              -> ::Result<()> {
         let key = key.as_ref();
         error_or!(unsafe {
-            unqlite_kv_fetch_callback(self.db,
+            unqlite_kv_fetch_callback(self.as_raw_mut_ptr(),
                                       key.as_ptr() as *const c_void,
                                       key.len() as i32,
                                       Some(consumer),
@@ -130,7 +130,9 @@ impl<'kv_store> UnQlite {
     pub fn kv_config_hash(&mut self,
                           hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
                           -> ::Result<()> {
-        error_or!(unsafe { unqlite_kv_config(self.db, UNQLITE_KV_CONFIG_HASH_FUNC, hash) })
+        error_or!(unsafe {
+            unqlite_kv_config(self.as_raw_mut_ptr(), UNQLITE_KV_CONFIG_HASH_FUNC, hash)
+        })
     }
 
     /// Configure the compare function of the underlying Key/Value (KV) storage engine.
@@ -142,7 +144,9 @@ impl<'kv_store> UnQlite {
     pub fn kv_config_cmp(&mut self,
                          hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
                          -> ::Result<()> {
-        error_or!(unsafe { unqlite_kv_config(self.db, UNQLITE_KV_CONFIG_CMP_FUNC, hash) })
+        error_or!(unsafe {
+            unqlite_kv_config(self.as_raw_mut_ptr(), UNQLITE_KV_CONFIG_CMP_FUNC, hash)
+        })
     }
 }
 
