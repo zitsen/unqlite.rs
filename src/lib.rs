@@ -156,9 +156,11 @@ mod config;
 mod util;
 mod transaction;
 mod kv_store;
+mod kv_cursor;
 
 pub use self::openmode::OpenMode;
 pub use self::util::Mmap;
+pub use self::kv_cursor::*;
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
