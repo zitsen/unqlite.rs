@@ -4,6 +4,9 @@
 extern crate unqlite_sys as ffi;
 extern crate libc;
 
+#[cfg(test)]
+extern crate tempfile;
+
 pub use error::*;
 
 #[macro_use]
