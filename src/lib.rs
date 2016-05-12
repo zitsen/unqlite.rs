@@ -33,7 +33,7 @@
 //!
 //! # #[cfg(feature = "enable-threads")]
 //! fn main() {
-//!     // The database memory is not handled by Rust, and the database is in-disk,
+//!     // The database memory is not handled by Rust, and the database is on-disk,
 //!     // so `mut` is not neccessary.
 //!     let unqlite = UnQlite::create_temp();
 //!     // Use any type that can use as `[u8]`
@@ -83,6 +83,19 @@ use ffi::{unqlite_close, unqlite_open};
 use error::Wrap;
 pub use error::{Error, Result};
 
+/// UnQlite database entry point.
+///
+/// UnQlite support both in-memory and on-disk database.
+/// There's several constructors:
+///
+/// Constructor | Meaning
+/// --- | ---
+/// [`create_in_memory`](#method.create_in_memory) | Create a private, in-memory database.
+/// [`create_temp`](#method.create_temp) | Create a private, temporary on-disk database.
+/// [`create`](#method.create) | Create if not exists, otherwise, open as read-write.
+/// [`open_mmap`](#method.open_mmap) | Obtain a read-only memory view of the whole database.
+/// [`open_readonly`](#method.open_readonly) | Open the database in a read-only mode.
+///
 pub struct UnQlite {
     engine: Shared<::ffi::unqlite>,
 }
@@ -144,7 +157,7 @@ impl UnQlite {
     /// ```c
     /// unqlite *pDb;
     ///
-    /// // in-disk database
+    /// // on-disk database
     /// rc = unqlite_open(&pDb,"test.db",UNQLITE_OPEN_CREATE);
     ///
     /// // in-memory database
@@ -162,6 +175,10 @@ impl UnQlite {
     /// ```ignore
     /// let _ = UnQlite::create(":mem:");
     /// ```
+    /// ## Panics
+    ///
+    /// Will panic if failed in creating.
+    ///
     #[inline]
     pub fn create_in_memory() -> UnQlite {
         Self::create(":mem:")
@@ -171,6 +188,10 @@ impl UnQlite {
     ///
     /// This private database will be automatically deleted as soon as
     /// the database connection is closed.
+    ///
+    /// ## Panics
+    ///
+    /// Will panic if failed in creating.
     ///
     /// ## C
     ///
