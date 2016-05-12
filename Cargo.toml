@@ -1,6 +1,6 @@
 [package]
 name = "unqlite"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Huo Linhe <huolinhe@berrygenomics.com>"]
 license = "MIT/Apache-2.0"
 readme  = "README.md"
