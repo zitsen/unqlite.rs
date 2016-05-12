@@ -76,7 +76,8 @@ pub trait Config {
 
 impl Config for UnQlite {
     fn max_page_cache(self, max: u32) -> Self {
-        wrap_raw!(self, config, UNQLITE_CONFIG_MAX_PAGE_CACHE, max).expect("set max page cache error");
+        wrap_raw!(self, config, UNQLITE_CONFIG_MAX_PAGE_CACHE, max)
+            .expect("set max page cache error");
         self
     }
 
@@ -86,7 +87,8 @@ impl Config for UnQlite {
     }
 
     fn kv_engine<S: Into<Vec<u8>>>(self, name: S) -> Self {
-        wrap_raw!(self, config,
+        wrap_raw!(self,
+                  config,
                   UNQLITE_CONFIG_KV_ENGINE,
                   CString::new(name).expect("KV engine error").into_raw())
             .expect("config KV engine");
@@ -94,8 +96,8 @@ impl Config for UnQlite {
     }
 
     fn err_log(&self) -> Option<String> {
-            let log: *mut ::libc::c_char = unsafe { mem::uninitialized() };
-            let len: i32 = unsafe { mem::uninitialized() };
+        let log: *mut ::libc::c_char = unsafe { mem::uninitialized() };
+        let len: i32 = unsafe { mem::uninitialized() };
 
         wrap_raw!(self, config, UNQLITE_CONFIG_ERR_LOG, &log, &len)
             .ok()
@@ -109,12 +111,9 @@ impl Config for UnQlite {
     }
 
     fn jx9_err_log(&self) -> Option<String> {
-            let log: *mut ::libc::c_char = unsafe { mem::uninitialized() };
-            let len: i32 = unsafe { mem::uninitialized() };
-        wrap_raw!(self, config,
-                  UNQLITE_CONFIG_JX9_ERR_LOG,
-                  &log,
-                  &len)
+        let log: *mut ::libc::c_char = unsafe { mem::uninitialized() };
+        let len: i32 = unsafe { mem::uninitialized() };
+        wrap_raw!(self, config, UNQLITE_CONFIG_JX9_ERR_LOG, &log, &len)
             .ok()
             .and_then(|_| {
                 if len > 0 {
@@ -128,8 +127,7 @@ impl Config for UnQlite {
     fn kv_name(&self) -> String {
         let kv_name: *mut ::libc::c_char = unsafe { mem::uninitialized() };
 
-        wrap_raw!(self, config, UNQLITE_CONFIG_GET_KV_NAME, &kv_name)
-                .unwrap();
+        wrap_raw!(self, config, UNQLITE_CONFIG_GET_KV_NAME, &kv_name).unwrap();
         from_chars_to_string(kv_name)
     }
 }
@@ -167,8 +165,8 @@ mod tests {
     #[test]
     fn disable_auto_commit() {
         let unqlite = UnQlite::create_temp()
-            .max_page_cache(4096u32)
-            .disable_auto_commit();
+                          .max_page_cache(4096u32)
+                          .disable_auto_commit();
     }
     #[test]
     #[should_panic]
