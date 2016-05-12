@@ -123,8 +123,31 @@ impl Entry {
         self.0.key_value().unwrap()
     }
 
-    /// TODO: key_callback
-    /// TODO: value_callback
+    /// Use mangle function for callback of key.
+    ///
+    /// The callback function should define as this:
+    ///
+    /// ```ignore
+    /// #[no_mangle]
+    /// pub extern fn print_data(ptr: *const c_void, len: u32, _data: *mut c_void) -> i32 {
+    ///     // Do stuff with (ptr, len)
+    ///     println!("Key/Value length is {}", len);
+    ///     0
+    /// }
+    /// ```
+    pub fn key_callback(&self,
+                        func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
+                        data: *mut c_void) {
+        self.0.key_callback(func, data)
+    }
+
+    /// Use mangle function for callback of value
+    pub fn value_callback(&self,
+                          func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
+                          data: *mut c_void) {
+        self.0.value_callback(func, data)
+    }
+
 
     /// Goto next entry.
     ///
@@ -323,6 +346,8 @@ impl Drop for RawCursor {
 #[cfg(feature = "enable-threads")]
 mod tests {
     use {KV, UnQlite};
+    use std::ptr;
+    use libc::c_void;
     use super::*;
 
     macro_rules! _test_assert_eq {
@@ -337,6 +362,12 @@ mod tests {
         ($lhs:expr, $rhs:expr) => (
             assert_eq!(String::from_utf8($lhs).unwrap(), $rhs.to_string())
         );
+    }
+
+    #[no_mangle]
+    pub extern fn print_data(ptr: *const c_void, len: u32, _data: *mut c_void) -> i32 {
+        println!("Key callback: {:?}", ptr);
+        0
     }
 
     #[test]
@@ -355,6 +386,7 @@ mod tests {
         _test_assert_eq!(entry.value(), "3");
         _test_assert_eq!(entry.key_value(), ("cde", "3"));
         let entry = entry.next().unwrap();
+        entry.key_callback(print_data, ptr::null_mut());
         _test_assert_eq!(entry.key(), "bcd");
         _test_assert_eq!(entry.value(), "2");
         _test_assert_eq!(entry.key_value(), ("bcd", "2"));
