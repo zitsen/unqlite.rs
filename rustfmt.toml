@@ -1,3 +1,4 @@
-format_strings = false
 reorder_imports = true
+report_fixme = "Always"
+report_todo = "Always"
 
