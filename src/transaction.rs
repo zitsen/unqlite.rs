@@ -1,8 +1,12 @@
-use super::UnQlite;
 use ffi::{unqlite_begin, unqlite_commit, unqlite_rollback};
 
+use UnQlite;
+use error::{Result, Wrap};
+
 /// Manual Transaction Manager
-impl<'transaction> UnQlite {
+///
+///
+pub trait Transaction {
     /// Manually begin a write-transaction on the specified database handle.
     ///
     /// Begin a write-transaction on the specified database handle. If a write-transaction has
@@ -11,9 +15,7 @@ impl<'transaction> UnQlite {
     /// automatically. An automatic transaction is started each time upper-layers or client code
     /// request a store, delete or an append operation.
     ///
-    pub fn begin(&mut self) -> ::Result<()> {
-        error_or!(unsafe { unqlite_begin(self.as_raw_mut_ptr()) })
-    }
+    fn begin(&mut self) -> Result<()>;
 
     /// Commit all changes to the database.
     ///
@@ -29,14 +31,27 @@ impl<'transaction> UnQlite {
     /// as soon as you have no more insertions. Also, for very large insertions (More than 20000),
     /// you should call `commit()` periodically to free some memory (A new transaction is
     /// started automatically in the next insertion).
-    pub fn commit(&mut self) -> ::Result<()> {
-        match error_or!(unsafe { unqlite_commit(self.as_raw_mut_ptr()) }) {
-            Ok(_) => Ok(()),
-            Err(err) => {
-                let _ = self.rollback();
-                Err(err)
-            }
-        }
+    fn commit(&mut self) -> Result<()>;
+
+    /// Rollback a write-transaction on the specified database handle.
+    ///
+    /// If a write transaction is open, then all changes made within the transaction are reverted
+    /// and the current write-transaction is closed (Dropping all exclusive locks on the target
+    /// database, deletion of the journal file, etc.). Otherwise this routine is a no-op.
+    ///
+    fn rollback(&mut self) -> Result<()>;
+}
+
+impl Transaction for UnQlite {
+    fn begin(&mut self) -> Result<()> {
+        wrap_raw!(self, begin)
+    }
+
+    fn commit(&mut self) -> Result<()> {
+        wrap_raw!(self, commit).map_err(|err| {
+            let _ = self.rollback();
+            err
+        })
     }
 
     /// Rollback a write-transaction on the specified database handle.
@@ -45,7 +60,22 @@ impl<'transaction> UnQlite {
     /// and the current write-transaction is closed (Dropping all exclusive locks on the target
     /// database, deletion of the journal file, etc.). Otherwise this routine is a no-op.
     ///
-    fn rollback(&mut self) -> ::Result<()> {
-        error_or!(unsafe { unqlite_rollback(self.as_raw_mut_ptr()) })
+    fn rollback(&mut self) -> Result<()> {
+        wrap_raw!(self, rollback)
+    }
+}
+
+#[cfg(test)]
+#[cfg(feature = "enable-threads")]
+mod tests {
+    use UnQlite;
+    use super::Transaction;
+    use Config;
+    #[test]
+    fn transaction() {
+        let mut uq = UnQlite::create_temp().disable_auto_commit();
+        uq.begin().expect("begin");
+        uq.commit().expect("commit");
+        uq.rollback().expect("rollback");
     }
 }
