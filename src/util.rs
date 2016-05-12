@@ -9,6 +9,7 @@ use ffi::{unqlite_util_load_mmaped_file, unqlite_util_random_num, unqlite_util_r
 use UnQlite;
 use error::{Result, Wrap};
 
+/// Utility interfaces.
 pub trait Util {
     /// Generate random string using the UnQLite PRNG.
     ///
