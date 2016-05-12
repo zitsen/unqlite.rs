@@ -1,171 +1,234 @@
-use ffi::constants::*;
 use std::error;
 use std::fmt;
 use std::result;
 
+use ffi::constants::*;
+
+/// Custom `Result` type.
 pub type Result<T> = result::Result<T, Error>;
 
-#[macro_export]
-macro_rules! error_or {
-    ($code: expr) => {
-        match $code {
-            ::ffi::constants::UNQLITE_OK => Ok(()),
-            code => Err(::Error::from(code)),
-        }
-    };
-    ($code: expr, $ok: expr) => {
-        match $code {
-            ::ffi::constants::UNQLITE_OK => Ok($ok),
-            code => Err(::Error::from(code)),
-        }
-    };
-}
-
+/// Custom `Error` type.
 #[derive(Debug)]
 pub enum Error {
-    UnqliteFailure(UnqliteFailure),
-    NulError(::std::ffi::NulError),
+    /// UnQlite error code map
+    Custom(Custom),
+    /// Any kind of other errors
+    Other(Box<error::Error>),
+}
+
+impl From<Custom> for Error {
+    fn from(err: Custom) -> Error {
+        Error::Custom(err)
+    }
 }
 
 impl From<::std::ffi::NulError> for Error {
     fn from(err: ::std::ffi::NulError) -> Error {
-        Error::NulError(err)
-    }
-}
-
-impl From<UnqliteFailure> for Error {
-    fn from(err: UnqliteFailure) -> Error {
-        Error::UnqliteFailure(err)
-    }
-}
-
-impl From<i32> for Error {
-    fn from(err: i32) -> Error {
-        Error::UnqliteFailure(UnqliteFailure::new(err))
+        Error::Other(Box::new(err))
     }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Error::UnqliteFailure(ref err) => err.fmt(f),
-            Error::NulError(ref err) => err.fmt(f),
+        match self {
+            &Error::Custom(ref c) => write!(f, "Custom error: {}", c),
+            &Error::Other(ref e) => write!(f, "Other error: {}", e),
         }
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum ErrorCode {
-    UNQLITE_NOMEM,
-    UNQLITE_ABORT,
-    UNQLITE_IOERR,
-    UNQLITE_CORRUPT,
-    UNQLITE_LOCKED,
-    UNQLITE_BUSY,
-    UNQLITE_DONE,
-    UNQLITE_PERM,
-    UNQLITE_NOTIMPLEMENTED,
-    UNQLITE_NOTFOUND,
-    UNQLITE_NOOP,
-    UNQLITE_INVALID,
-    UNQLITE_EOF,
-    UNQLITE_UNKNOWN,
-    UNQLITE_LIMIT,
-    UNQLITE_EXISTS,
-    UNQLITE_EMPTY,
-    UNQLITE_COMPILE_ERR,
-    UNQLITE_VM_ERR,
-    UNQLITE_FULL,
-    UNQLITE_CANTOPEN,
-    UNQLITE_READ_ONLY,
-    UNQLITE_LOCKERR,
-    UNREACHABLE,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct UnqliteFailure {
-    code: ErrorCode,
-    extended_code: i32,
-}
-
-impl UnqliteFailure {
-    pub fn new(result_code: i32) -> UnqliteFailure {
-        let code = match result_code {
-            UNQLITE_NOMEM => ErrorCode::UNQLITE_NOMEM,
-            UNQLITE_ABORT => ErrorCode::UNQLITE_ABORT,
-            UNQLITE_IOERR => ErrorCode::UNQLITE_IOERR,
-            UNQLITE_CORRUPT => ErrorCode::UNQLITE_CORRUPT,
-            UNQLITE_LOCKED => ErrorCode::UNQLITE_LOCKED,
-            UNQLITE_BUSY => ErrorCode::UNQLITE_BUSY,
-            UNQLITE_DONE => ErrorCode::UNQLITE_DONE,
-            UNQLITE_PERM => ErrorCode::UNQLITE_PERM,
-            UNQLITE_NOTIMPLEMENTED => ErrorCode::UNQLITE_NOTIMPLEMENTED,
-            UNQLITE_NOTFOUND => ErrorCode::UNQLITE_NOTFOUND,
-            UNQLITE_NOOP => ErrorCode::UNQLITE_NOOP,
-            UNQLITE_INVALID => ErrorCode::UNQLITE_INVALID,
-            UNQLITE_EOF => ErrorCode::UNQLITE_EOF,
-            UNQLITE_UNKNOWN => ErrorCode::UNQLITE_UNKNOWN,
-            UNQLITE_LIMIT => ErrorCode::UNQLITE_LIMIT,
-            UNQLITE_EXISTS => ErrorCode::UNQLITE_EXISTS,
-            UNQLITE_EMPTY => ErrorCode::UNQLITE_EMPTY,
-            UNQLITE_COMPILE_ERR => ErrorCode::UNQLITE_COMPILE_ERR,
-            UNQLITE_VM_ERR => ErrorCode::UNQLITE_VM_ERR,
-            UNQLITE_FULL => ErrorCode::UNQLITE_FULL,
-            UNQLITE_CANTOPEN => ErrorCode::UNQLITE_CANTOPEN,
-            UNQLITE_READ_ONLY => ErrorCode::UNQLITE_READ_ONLY,
-            UNQLITE_LOCKERR => ErrorCode::UNQLITE_LOCKERR,
-            _ => ErrorCode::UNREACHABLE,
-        };
-        UnqliteFailure {
-            code: code,
-            extended_code: result_code,
-        }
-    }
-}
-
-impl fmt::Display for UnqliteFailure {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f,
-               "Error code {}: {}",
-               self.extended_code,
-               code_to_str(self.extended_code))
-    }
-}
-
-impl error::Error for UnqliteFailure {
+impl error::Error for Error {
     fn description(&self) -> &str {
-        code_to_str(self.extended_code)
+        match self {
+            &Error::Custom(ref c) => c.description(),
+            &Error::Other(ref e) => e.as_ref().description(),
+        }
     }
 }
 
-fn code_to_str(code: i32) -> &'static str {
-    match code {
-        UNQLITE_NOMEM => "Out of memory",
-        UNQLITE_ABORT => "Another thread have released this instance",
-        UNQLITE_IOERR => "IO error",
-        UNQLITE_CORRUPT => "Corrupt pointer",
-        UNQLITE_LOCKED => "Forbidden Operation",
-        UNQLITE_BUSY => "The database file is locked",
-        UNQLITE_DONE => "Operation done",
-        UNQLITE_PERM => "Permission error",
-        UNQLITE_NOTIMPLEMENTED => {
-            "Method not implemented by the underlying \
-             Key/Value storage engine"
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Custom {
+    kind: ErrorKind,
+    raw: i32,
+}
+
+/// Error kinds from unqlite official documents.
+#[allow(non_camel_case_types)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ErrorKind {
+    /// Successful result
+    OK = 0,
+    /// Out of memory
+    NOMEM,
+    /// Another thread have released this instance
+    ABORT,
+    /// IO error
+    IOERR,
+    /// Corrupt pointer
+    CORRUPT,
+    /// Forbidden Operation
+    LOCKED,
+    /// The database file is locked
+    BUSY,
+    /// Operation done, not an error
+    DONE,
+    /// Permission error
+    PERM,
+    /// Method not implemented
+    NOTIMPLEMENTED,
+    /// No such record
+    NOTFOUND,
+    /// No such method
+    NOOP,
+    /// Invalid parameter
+    INVALID,
+    /// End Of Input
+    EOF,
+    /// Unknown configuration option
+    UNKNOWN,
+    /// Database limit reached
+    LIMIT,
+    /// Record exists
+    EXISTS,
+    /// Empty record
+    EMPTY,
+    /// Compilation error
+    COMPILE_ERR,
+    /// Virtual machine error
+    VM_ERR,
+    /// Full database unlikely
+    FULL,
+    /// Unable to open the database file
+    CANTOPEN,
+    /// Read only Key/Value storage engine
+    READ_ONLY,
+    /// Locking protocol error
+    LOCKERR,
+    #[doc(hidden)]
+    __Nonexhaustive,
+}
+
+impl From<i32> for ErrorKind {
+    fn from(code: i32) -> ErrorKind {
+        match code {
+            UNQLITE_OK => ErrorKind::OK,
+            UNQLITE_NOMEM => ErrorKind::NOMEM,
+            UNQLITE_ABORT => ErrorKind::ABORT,
+            UNQLITE_IOERR => ErrorKind::IOERR,
+            UNQLITE_CORRUPT => ErrorKind::CORRUPT,
+            UNQLITE_LOCKED => ErrorKind::LOCKED,
+            UNQLITE_BUSY => ErrorKind::BUSY,
+            UNQLITE_DONE => ErrorKind::DONE,
+            UNQLITE_PERM => ErrorKind::PERM,
+            UNQLITE_NOTIMPLEMENTED => ErrorKind::NOTIMPLEMENTED,
+            UNQLITE_NOTFOUND => ErrorKind::NOTFOUND,
+            UNQLITE_NOOP => ErrorKind::NOOP,
+            UNQLITE_INVALID => ErrorKind::INVALID,
+            UNQLITE_EOF => ErrorKind::EOF,
+            UNQLITE_UNKNOWN => ErrorKind::UNKNOWN,
+            UNQLITE_LIMIT => ErrorKind::LIMIT,
+            UNQLITE_EXISTS => ErrorKind::EXISTS,
+            UNQLITE_EMPTY => ErrorKind::EMPTY,
+            UNQLITE_COMPILE_ERR => ErrorKind::COMPILE_ERR,
+            UNQLITE_VM_ERR => ErrorKind::VM_ERR,
+            UNQLITE_FULL => ErrorKind::FULL,
+            UNQLITE_CANTOPEN => ErrorKind::CANTOPEN,
+            UNQLITE_READ_ONLY => ErrorKind::READ_ONLY,
+            UNQLITE_LOCKERR => ErrorKind::LOCKERR,
+            _ => ErrorKind::__Nonexhaustive,
         }
-        UNQLITE_NOTFOUND => "No such record",
-        UNQLITE_NOOP => "No such method",
-        UNQLITE_INVALID => "Invalid parameter",
-        UNQLITE_EOF => "End Of Input",
-        UNQLITE_UNKNOWN => "Unknown configuration option",
-        UNQLITE_LIMIT => "Database limit reached",
-        UNQLITE_EXISTS => "Record exists",
-        UNQLITE_EMPTY => "Empty record",
-        UNQLITE_COMPILE_ERR => "Compilation error",
-        UNQLITE_VM_ERR => " Virtual machine error",
-        UNQLITE_FULL => "Full database (unlikely)",
-        UNQLITE_CANTOPEN => "Unable to open the database file",
-        UNQLITE_READ_ONLY => "Read only Key/Value storage engine",
-        UNQLITE_LOCKERR => "Locking protocol error",
-        _ => "Unreachble code",
+    }
+}
+
+/// A wrap trait for unqlite FFI error code to Rust-y `Result`.
+///
+/// To populate better visual style, we add a `Wrap` trait to original
+/// unqlite return value. The `Wrap` trait has only one method `drop` -
+/// which is used to wrap the unqlite return value to Rust `Result`.
+/// So the FFI-related methods should just use `.wrap()` like this:
+///
+/// ```ignore
+/// unsafe {
+///     unqlite_open(...).wrap()  // Now it is Result<(), Error>
+/// }
+/// ```
+///
+/// This should be nice for functional programming style.
+///
+/// NOTE: Do not use this trait out of the crate
+///
+/// TODO: [`pub_restricted` feature][rfc_1422] is for the case,
+/// but [rsutfmt] will cause a panic if we use it now,
+/// we would apply this feature after [rustfmt][rustfmt] support it.
+///
+/// [rfc_1422]: https://github.com/rust-lang/rfcs/blob/master/text/1422-pub-restricted.md
+/// [rustfmt]: https://github.com/rust-lang-nursery/rustfmt
+pub trait Wrap {
+    fn wrap(self) -> Result<()>;
+}
+
+impl Wrap for i32 {
+    fn wrap(self) -> Result<()> {
+        Custom::new(self).into()
+    }
+}
+
+impl Custom {
+    pub fn new(result: i32) -> Result<()> {
+        let kind = ErrorKind::from(result);
+        match kind {
+            ErrorKind::OK => Ok(()),
+            _ => {
+                Err(Custom {
+                        kind: kind,
+                        raw: result,
+                    }
+                    .into())
+            }
+        }
+    }
+
+    pub fn error(&self) -> &str {
+        match self.kind {
+            ErrorKind::NOMEM => "Out of memory",
+            ErrorKind::ABORT => "Another thread have released this instance",
+            ErrorKind::IOERR => "IO error",
+            ErrorKind::CORRUPT => "Corrupt pointer",
+            ErrorKind::LOCKED => "Forbidden Operation",
+            ErrorKind::BUSY => "The database file is locked",
+            ErrorKind::DONE => "Operation done",
+            ErrorKind::PERM => "Permission error",
+            ErrorKind::NOTIMPLEMENTED => {
+                "Method not implemented by the underlying Key/Value storage engine"
+            }
+            ErrorKind::NOTFOUND => "No such record",
+            ErrorKind::NOOP => "No such method",
+            ErrorKind::INVALID => "Invalid parameter",
+            ErrorKind::EOF => "End Of Input",
+            ErrorKind::UNKNOWN => "Unknown configuration option",
+            ErrorKind::LIMIT => "Database limit reached",
+            ErrorKind::EXISTS => "Record exists",
+            ErrorKind::EMPTY => "Empty record",
+            ErrorKind::COMPILE_ERR => "Compilation error",
+            ErrorKind::VM_ERR => " Virtual machine error",
+            ErrorKind::FULL => "Full database (unlikely)",
+            ErrorKind::CANTOPEN => "Unable to open the database file",
+            ErrorKind::READ_ONLY => "Read only Key/Value storage engine",
+            ErrorKind::LOCKERR => "Locking protocol error",
+            ErrorKind::OK => unreachable!(),
+            ErrorKind::__Nonexhaustive => unreachable!(),
+        }
+    }
+}
+
+impl error::Error for Custom {
+    fn description(&self) -> &str {
+        self.error()
+    }
+}
+
+impl fmt::Display for Custom {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Custom error: {}", self.error())
     }
 }
