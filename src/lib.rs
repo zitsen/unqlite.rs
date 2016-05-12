@@ -279,7 +279,8 @@ mod transaction;
 mod kv_store;
 mod kv_cursor;
 
-pub use self::openmode::OpenMode;
+use self::openmode::OpenMode;
+
 pub use self::config::Config;
 pub use self::transaction::Transaction;
 pub use self::util::*;
