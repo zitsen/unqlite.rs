@@ -15,7 +15,7 @@ pub trait Transaction {
     /// automatically. An automatic transaction is started each time upper-layers or client code
     /// request a store, delete or an append operation.
     ///
-    fn begin(&mut self) -> Result<()>;
+    fn begin(&self) -> Result<()>;
 
     /// Commit all changes to the database.
     ///
@@ -31,7 +31,7 @@ pub trait Transaction {
     /// as soon as you have no more insertions. Also, for very large insertions (More than 20000),
     /// you should call `commit()` periodically to free some memory (A new transaction is
     /// started automatically in the next insertion).
-    fn commit(&mut self) -> Result<()>;
+    fn commit(&self) -> Result<()>;
 
     /// Rollback a write-transaction on the specified database handle.
     ///
@@ -39,28 +39,22 @@ pub trait Transaction {
     /// and the current write-transaction is closed (Dropping all exclusive locks on the target
     /// database, deletion of the journal file, etc.). Otherwise this routine is a no-op.
     ///
-    fn rollback(&mut self) -> Result<()>;
+    fn rollback(&self) -> Result<()>;
 }
 
 impl Transaction for UnQlite {
-    fn begin(&mut self) -> Result<()> {
+    fn begin(&self) -> Result<()> {
         wrap_raw!(self, begin)
     }
 
-    fn commit(&mut self) -> Result<()> {
+    fn commit(&self) -> Result<()> {
         wrap_raw!(self, commit).map_err(|err| {
             let _ = self.rollback();
             err
         })
     }
 
-    /// Rollback a write-transaction on the specified database handle.
-    ///
-    /// If a write transaction is open, then all changes made within the transaction are reverted
-    /// and the current write-transaction is closed (Dropping all exclusive locks on the target
-    /// database, deletion of the journal file, etc.). Otherwise this routine is a no-op.
-    ///
-    fn rollback(&mut self) -> Result<()> {
+    fn rollback(&self) -> Result<()> {
         wrap_raw!(self, rollback)
     }
 }
@@ -73,7 +67,7 @@ mod tests {
     use Config;
     #[test]
     fn transaction() {
-        let mut uq = UnQlite::create_temp().disable_auto_commit();
+        let uq = UnQlite::create_temp().disable_auto_commit();
         uq.begin().expect("begin");
         uq.commit().expect("commit");
         uq.rollback().expect("rollback");

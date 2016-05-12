@@ -20,27 +20,27 @@ pub trait KV {
     /// Write a new record into the database. If the record does not exists, it is created.
     /// Otherwise, it is replaced. That is, the new data overwrite the old data. You can switch to
     /// `kv_append()` for an append operation.
-    fn kv_store<K: AsRef<[u8]>, V: AsRef<[u8]>>(&mut self, key: K, value: V) -> Result<()>;
+    fn kv_store<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<()>;
 
     /// Append data to a database record.
     ///
     /// Write a new record into the database. If the record does not exists, it is created.
     /// Otherwise, the new data chunk is appended to the end of the old chunk. You can switch to
     /// `kv_store()` for an overwrite operation.
-    fn kv_append<K: AsRef<[u8]>, V: AsRef<[u8]>>(&mut self, key: K, value: V) -> Result<()>;
+    fn kv_append<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<()>;
 
     /// Remove a record from the database.
     ///
     /// To remove a particular record from the database, you can use this high-level thread-safe
     /// routine to perform the deletion. You can also delete records using cursors via
     /// unqlite_kv_cursor_delete_entry().
-    fn kv_delete<K: AsRef<[u8]>>(&mut self, key: K) -> Result<()>;
+    fn kv_delete<K: AsRef<[u8]>>(&self, key: K) -> Result<()>;
 
     /// Check if `key` is contained in database.
-    fn kv_contains<K: AsRef<[u8]>>(&mut self, key: K) -> bool;
+    fn kv_contains<K: AsRef<[u8]>>(&self, key: K) -> bool;
 
     /// Fetch a record from the database and returns the length only
-    fn kv_fetch_length<K: AsRef<[u8]>>(&mut self, key: K) -> Result<i64>;
+    fn kv_fetch_length<K: AsRef<[u8]>>(&self, key: K) -> Result<i64>;
 
     /// Fetch a record from the database.
     ///
@@ -49,7 +49,7 @@ pub trait KV {
     /// The recommended interface for extracting very large data from the database is
     /// kv_fetch_callback() where the user simply need to supply a consumer callback
     /// instead of a buffer which may be unacceptable when dealing with very large records.
-    fn kv_fetch<K: AsRef<[u8]>>(&mut self, key: K) -> Result<Vec<u8>>;
+    fn kv_fetch<K: AsRef<[u8]>>(&self, key: K) -> Result<Vec<u8>>;
 
     /// Fetch a record from the database and invoke the supplied callback to consume its data.
     fn kv_fetch_callback<K: AsRef<[u8]>>(&self,
@@ -65,7 +65,7 @@ pub trait KV {
     /// Specify a hash function to be used instead of the built-in hash function. This option
     /// accepts a single argument which is a pointer to the client hash function.
     /// Note that the built-in hash function (DJB) is recommended for most purposes.
-    fn kv_config_hash(&mut self,
+    fn kv_config_hash(&self,
                       hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
                       -> Result<()>;
 
@@ -75,14 +75,14 @@ pub trait KV {
     /// option accepts a single argument which is a pointer to the client comparison function.
     /// Note that the built-in comparison function (Tuned memcmp() implementation) is recommended
     /// for most purposes.
-    fn kv_config_cmp(&mut self,
+    fn kv_config_cmp(&self,
                      hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
                      -> Result<()>;
 }
 
 /// Key-Value Store Interface
 impl KV for UnQlite {
-    fn kv_store<K: AsRef<[u8]>, V: AsRef<[u8]>>(&mut self, key: K, value: V) -> Result<()> {
+    fn kv_store<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<()> {
         let key = key.as_ref();
         let value = value.as_ref();
         wrap!(kv_store,
@@ -93,7 +93,7 @@ impl KV for UnQlite {
               value.len() as _)
     }
 
-    fn kv_append<K: AsRef<[u8]>, V: AsRef<[u8]>>(&mut self, key: K, value: V) -> Result<()> {
+    fn kv_append<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<()> {
         let key = key.as_ref();
         let value = value.as_ref();
         wrap!(kv_append,
@@ -104,18 +104,18 @@ impl KV for UnQlite {
               value.len() as _)
     }
 
-    fn kv_delete<K: AsRef<[u8]>>(&mut self, key: K) -> Result<()> {
+    fn kv_delete<K: AsRef<[u8]>>(&self, key: K) -> Result<()> {
         wrap!(kv_delete,
               self.as_raw_mut_ptr(),
               key.as_ref().as_ptr() as _,
               key.as_ref().len() as _)
     }
 
-    fn kv_contains<K: AsRef<[u8]>>(&mut self, key: K) -> bool {
+    fn kv_contains<K: AsRef<[u8]>>(&self, key: K) -> bool {
         self.kv_fetch_length(key).map(|_x| true).unwrap_or(false)
     }
 
-    fn kv_fetch_length<K: AsRef<[u8]>>(&mut self, key: K) -> Result<i64> {
+    fn kv_fetch_length<K: AsRef<[u8]>>(&self, key: K) -> Result<i64> {
         let key = key.as_ref();
         let mut len = 0i64;
         wrap!(kv_fetch,
@@ -127,7 +127,7 @@ impl KV for UnQlite {
             .map(|_| len)
     }
 
-    fn kv_fetch<K: AsRef<[u8]>>(&mut self, key: K) -> Result<Vec<u8>> {
+    fn kv_fetch<K: AsRef<[u8]>>(&self, key: K) -> Result<Vec<u8>> {
         let key = key.as_ref();
         let mut len = try!(self.kv_fetch_length(key));
         let mut buf: Vec<u8> = Vec::with_capacity(len as usize);
@@ -159,7 +159,7 @@ impl KV for UnQlite {
               ptr::null_mut())
     }
 
-    fn kv_config_hash(&mut self,
+    fn kv_config_hash(&self,
                       hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
                       -> Result<()> {
         wrap!(kv_config,
@@ -168,9 +168,7 @@ impl KV for UnQlite {
               hash)
     }
 
-    fn kv_config_cmp(&mut self,
-                     cmp: extern "C" fn(key: *const c_void, len: u32) -> u32)
-                     -> Result<()> {
+    fn kv_config_cmp(&self, cmp: extern "C" fn(key: *const c_void, len: u32) -> u32) -> Result<()> {
         wrap!(kv_config,
               self.as_raw_mut_ptr(),
               UNQLITE_KV_CONFIG_CMP_FUNC,
