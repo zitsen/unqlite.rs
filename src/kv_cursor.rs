@@ -77,8 +77,8 @@ pub trait Cursor {
     /// otherwise return `None`.
     ///   * **Le**: The cursor is left pointing to the largest key in the database that is smaller
     /// than `key`, If the database contains no keys smaller than `key`, it returns `None`.
-    ///   * **Ge**: Oppsite to **Le**, it returns the smallest `Entry` in the database that is larger
-    /// than `key`.If the database contains no keys smaller than `key`, return `None`.
+    ///   * **Ge**: Oppsite to **Le**, it returns the smallest `Entry` in the database that is
+    ///   larger than `key`.If the database contains no keys smaller than `key`, return `None`.
     fn seek<K: AsRef<[u8]>>(&self, key: K, pos: Direction) -> Option<Entry>;
 }
 
