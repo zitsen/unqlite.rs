@@ -1,5 +1,8 @@
 //! A high-level UnQlite database engine wrapper.
 //!
+//! [![travis-badge][]][travis] [![release-badge][]][cargo] [![downloads]][cargo]
+//! [![docs-badge][]][docs] [![license-badge][]][cargo]
+//!
 //! NOTE: Some of the documents is stolen from [UnQlite Offical Website][unqlite].
 //!
 //! # What is UnQlite?
@@ -63,6 +66,14 @@
 //! ```
 //!
 //! [unqlite]: https://unqlite.org/index.html
+//! [travis-badge]: https://img.shields.io/travis/zitsen/unqlite.rs.svg?style=flat-square
+//! [travis]: https://travis-ci.org/zitsen/unqlite.rs
+//! [release-badge]: https://img.shields.io/crates/v/unqlite.svg?style=flat-square
+//! [downloads]: https://img.shields.io/crates/d/unqlite.svg?style=flat-square
+//! [cargo]: https://crates.io/crates/unqlite
+//! [docs-badge]: https://img.shields.io/badge/API-docs-blue.svg?style=flat-square
+//! [docs]: https://zitsen.github.io/unqlite.rs
+//! [license-badge]: https://img.shields.io/crates/l/unqlite.svg?style=flat-square
 
 #![feature(shared)]
 #![feature(unique)]
