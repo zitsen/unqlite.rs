@@ -1,3 +1,17 @@
+<a name="v1.2.0"></a>
+## v1.2.0 (2016-05-13)
+
+
+#### Features
+
+* **UnQLite:**  use official name as struct name ([65b647e0](65b647e0))
+
+#### Bug Fixes
+
+* **clippy:**  fix some clippy warnings ([c877df4a](c877df4a))
+
+
+
 <a name="v1.1.1"></a>
 ## v1.1.1 (2016-05-13)
 
