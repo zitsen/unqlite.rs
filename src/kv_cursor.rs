@@ -9,7 +9,7 @@ use ffi::{unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_
           unqlite_kv_cursor_reset, unqlite_kv_cursor_seek, unqlite_kv_cursor_valid_entry};
 use ffi::constants::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
 
-use UnQlite;
+use UnQLite;
 use error::{Result, Wrap};
 
 /// Cursor iterator interfaces.
@@ -23,11 +23,11 @@ use error::{Result, Wrap};
 /// ```
 /// # extern crate unqlite;
 /// #
-/// use unqlite::{UnQlite, Cursor};
+/// use unqlite::{UnQLite, Cursor};
 /// #
 /// # #[cfg(feature = "enable-threads")]
 /// # fn main() {
-/// let unqlite = UnQlite::create_temp();
+/// let unqlite = UnQLite::create_temp();
 /// let mut entry = unqlite.first();
 ///
 /// loop {
@@ -81,27 +81,27 @@ pub trait Cursor {
     fn seek<K: AsRef<[u8]>>(&self, key: K, pos: Direction) -> Option<Entry>;
 }
 
-impl Cursor for UnQlite {
+impl Cursor for UnQLite {
     fn first(&self) -> Option<Entry> {
-        RawCursor::init(&self)
+        RawCursor::init(self)
             .and_then(|cur| cur.first())
             .ok()
             .and_then(|cur| cur.valid())
-            .map(|cur| Entry(cur))
+            .map(Entry)
     }
     fn last(&self) -> Option<Entry> {
-        RawCursor::init(&self)
+        RawCursor::init(self)
             .and_then(|cur| cur.last())
             .ok()
             .and_then(|cur| cur.valid())
-            .map(|cur| Entry(cur))
+            .map(Entry)
     }
     fn seek<K: AsRef<[u8]>>(&self, key: K, pos: Direction) -> Option<Entry> {
-        RawCursor::init(&self)
+        RawCursor::init(self)
             .and_then(|cur| cur.seek(key, pos))
             .ok()
             .and_then(|cur| cur.valid())
-            .map(|cur| Entry(cur))
+            .map(Entry)
     }
 }
 
@@ -157,7 +157,7 @@ impl Entry {
             .next()
             .ok()
             .and_then(|raw| raw.valid())
-            .map(|raw| Entry(raw))
+            .map(Entry)
     }
 
     /// Goto previous entry.
@@ -168,12 +168,12 @@ impl Entry {
             .prev()
             .ok()
             .and_then(|raw| raw.valid())
-            .map(|raw| Entry(raw))
+            .map(Entry)
     }
 
     /// Delete the pointed record.
     pub fn delete(self) -> Option<Self> {
-        self.0.delete().map(|raw| Entry(raw)).ok()
+        self.0.delete().map(Entry).ok()
     }
 }
 
@@ -212,11 +212,11 @@ macro_rules! wrap_in_place {
 
 impl RawCursor {
     /// Opening Database Cursors
-    pub fn init(unqlite: &UnQlite) -> Result<Self> {
+    pub fn init(unqlite: &UnQLite) -> Result<Self> {
         let mut cursor: *mut unqlite_kv_cursor = unsafe { mem::uninitialized() };
         wrap!(init, unqlite.as_raw_mut_ptr(), &mut cursor).map(|_| {
             RawCursor {
-                engine: unqlite.engine.clone(),
+                engine: unqlite.engine,
                 cursor: unsafe { Unique::new(cursor) },
             }
         })
@@ -348,7 +348,7 @@ mod tests {
     use std::os::raw::c_void;
     use std::ptr;
     use super::*;
-    use {KV, UnQlite};
+    use {KV, UnQLite};
 
     macro_rules! _test_assert_eq {
         ($lhs:expr, ($rhs_0:expr, $rhs_1:expr)) => {
@@ -373,7 +373,7 @@ mod tests {
 
     #[test]
     fn test_kv_cursor() {
-        let unqlite = UnQlite::create_in_memory();
+        let unqlite = UnQLite::create_in_memory();
         unqlite.kv_store("abc", "1").unwrap();
         unqlite.kv_store("cde", "3").unwrap();
         unqlite.kv_store("bcd", "2").unwrap();

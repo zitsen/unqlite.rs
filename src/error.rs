@@ -10,7 +10,7 @@ pub type Result<T> = result::Result<T, Error>;
 /// Custom `Error` type.
 #[derive(Debug)]
 pub enum Error {
-    /// UnQlite error code map
+    /// UnQLite error code map
     Custom(Custom),
     /// Any kind of other errors
     Other(Box<error::Error>),
@@ -30,18 +30,18 @@ impl From<::std::ffi::NulError> for Error {
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            &Error::Custom(ref c) => write!(f, "Custom error: {}", c),
-            &Error::Other(ref e) => write!(f, "Other error: {}", e),
+        match *self {
+            Error::Custom(ref c) => write!(f, "Custom error: {}", c),
+            Error::Other(ref e) => write!(f, "Other error: {}", e),
         }
     }
 }
 
 impl error::Error for Error {
     fn description(&self) -> &str {
-        match self {
-            &Error::Custom(ref c) => c.description(),
-            &Error::Other(ref e) => e.as_ref().description(),
+        match *self {
+            Error::Custom(ref c) => c.description(),
+            Error::Other(ref e) => e.as_ref().description(),
         }
     }
 }
@@ -169,12 +169,12 @@ pub trait Wrap {
 
 impl Wrap for i32 {
     fn wrap(self) -> Result<()> {
-        Custom::new(self).into()
+        Custom::from_raw(self).into()
     }
 }
 
 impl Custom {
-    pub fn new(result: i32) -> Result<()> {
+    pub fn from_raw(result: i32) -> Result<()> {
         let kind = ErrorKind::from(result);
         match kind {
             ErrorKind::OK => Ok(()),

@@ -1,11 +1,11 @@
-//! A high-level UnQlite database engine wrapper.
+//! A high-level UnQLite database engine wrapper.
 //!
 //! [![travis-badge][]][travis] [![release-badge][]][cargo] [![downloads]][cargo]
 //! [![docs-badge][]][docs] [![license-badge][]][cargo]
 //!
-//! NOTE: Some of the documents is stolen from [UnQlite Offical Website][unqlite].
+//! NOTE: Some of the documents is stolen from [UnQLite Offical Website][unqlite].
 //!
-//! # What is UnQlite?
+//! # What is UnQLite?
 //!
 //! >
 //! UnQLite is a software library which implements a *self-contained*, *serverless*,
@@ -22,23 +22,23 @@
 //!
 //! # Port to Rust
 //!
-//! This crate is high-level UnQlite database wrapper for Rust. A low-level bindings wrapper
+//! This crate is high-level UnQLite database wrapper for Rust. A low-level bindings wrapper
 //! is avaliable as a seperated crate: [unqlite-sys](https://crates.io/crates/unqlite-sys).
 //!
 //! # Usage
 //!
-//! You can start with `UnQlite` constructors:
+//! You can start with `UnQLite` constructors:
 //!
 //! ```
 //! extern crate unqlite;
 //!
-//! use unqlite::{UnQlite, Config, KV, Cursor};
+//! use unqlite::{UnQLite, Config, KV, Cursor};
 //!
 //! # #[cfg(feature = "enable-threads")]
 //! fn main() {
 //!     // The database memory is not handled by Rust, and the database is on-disk,
 //!     // so `mut` is not neccessary.
-//!     let unqlite = UnQlite::create_temp();
+//!     let unqlite = UnQLite::create_temp();
 //!     // Use any type that can use as `[u8]`
 //!     unqlite.kv_store("key", "a long length value").unwrap();
 //!     unqlite.kv_store("abc", [1,2,3]).unwrap();
@@ -94,9 +94,9 @@ use ffi::{unqlite_close, unqlite_open};
 use error::Wrap;
 pub use error::{Error, Result};
 
-/// UnQlite database entry point.
+/// UnQLite database entry point.
 ///
-/// UnQlite support both in-memory and on-disk database.
+/// UnQLite support both in-memory and on-disk database.
 /// There's several constructors:
 ///
 /// Constructor | Meaning
@@ -107,7 +107,7 @@ pub use error::{Error, Result};
 /// [`open_mmap`](#method.open_mmap) | Obtain a read-only memory view of the whole database.
 /// [`open_readonly`](#method.open_readonly) | Open the database in a read-only mode.
 ///
-pub struct UnQlite {
+pub struct UnQLite {
     engine: Shared<::ffi::unqlite>,
 }
 
@@ -133,23 +133,23 @@ macro_rules! wrap_raw {
     );
 }
 
-impl UnQlite {
-    /// Create UnQlite database at specific path.
+impl UnQLite {
+    /// Create UnQLite database at specific path.
     ///
     /// ```ignore
-    /// let _ = UnQlite::open("str");
-    /// let _ = UnQlite::open(String::new());
+    /// let _ = UnQLite::open("str");
+    /// let _ = UnQLite::open(String::new());
     /// ```
     #[inline]
-    fn open<P: AsRef<str>>(filename: P, mode: OpenMode) -> Result<UnQlite> {
+    fn open<P: AsRef<str>>(filename: P, mode: OpenMode) -> Result<UnQLite> {
         let mut db: *mut ::ffi::unqlite = unsafe { mem::uninitialized() };
         let filename = filename.as_ref();
         let filename = try!(CString::new(filename));
         wrap!(open, &mut db, filename.as_ptr(), mode.into())
-            .map(|_| UnQlite { engine: unsafe { Shared::new(db) } })
+            .map(|_| UnQLite { engine: unsafe { Shared::new(db) } })
     }
 
-    /// Create UnQlite database as `filename`.
+    /// Create UnQLite database as `filename`.
     ///
     /// By default, the database is created in read-write mode.
     ///
@@ -160,7 +160,7 @@ impl UnQlite {
     /// ## Example
     ///
     /// ```ignore
-    /// let _ = UnQlite::create("test.db");
+    /// let _ = UnQLite::create("test.db");
     /// ```
     ///
     /// ## C
@@ -175,7 +175,7 @@ impl UnQlite {
     /// rc = unqlite_open(&pDb, ":mem:", UNQLITE_OPEN_MEM);
     /// ```
     #[inline]
-    pub fn create<P: AsRef<str>>(filename: P) -> UnQlite {
+    pub fn create<P: AsRef<str>>(filename: P) -> UnQLite {
         Self::open(filename, OpenMode::Create).unwrap()
     }
 
@@ -184,14 +184,14 @@ impl UnQlite {
     /// Equivalent to:
     ///
     /// ```ignore
-    /// let _ = UnQlite::create(":mem:");
+    /// let _ = UnQLite::create(":mem:");
     /// ```
     /// ## Panics
     ///
     /// Will panic if failed in creating.
     ///
     #[inline]
-    pub fn create_in_memory() -> UnQlite {
+    pub fn create_in_memory() -> UnQLite {
         Self::create(":mem:")
     }
 
@@ -210,7 +210,7 @@ impl UnQlite {
     /// int rc = unqlite_open("test.db", UNQLITE_OPEN_TEMP_DB);
     /// ```
     #[inline]
-    pub fn create_temp() -> UnQlite {
+    pub fn create_temp() -> UnQLite {
         Self::open("", OpenMode::TempDB).unwrap()
     }
 
@@ -229,7 +229,7 @@ impl UnQlite {
     /// unqlite_open(&pDb, "test.db", UNQLITE_OPEN_MMAP | UNQLITE_OPEN_READONLY);
     /// ```
     #[inline]
-    pub fn open_mmap<P: AsRef<str>>(filename: P) -> UnQlite {
+    pub fn open_mmap<P: AsRef<str>>(filename: P) -> UnQLite {
         Self::open(filename, OpenMode::MMap).unwrap()
     }
 
@@ -249,7 +249,7 @@ impl UnQlite {
     /// unqlite_open(&pDb, "test.db", UNQLITE_OPEN_READONLY);
     /// ```
     #[inline]
-    pub fn open_readonly<P: AsRef<str>>(filename: P) -> UnQlite {
+    pub fn open_readonly<P: AsRef<str>>(filename: P) -> UnQLite {
         Self::open(filename, OpenMode::ReadOnly).unwrap()
     }
 
@@ -262,10 +262,10 @@ impl UnQlite {
     }
 }
 
-unsafe impl Send for UnQlite {}
-unsafe impl Sync for UnQlite {}
+unsafe impl Send for UnQLite {}
+unsafe impl Sync for UnQLite {}
 
-impl Drop for UnQlite {
+impl Drop for UnQLite {
     fn drop(&mut self) {
         self.close().unwrap();
     }
@@ -290,32 +290,32 @@ pub use self::kv_cursor::*;
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests_threadsafe {
-    use super::UnQlite;
+    use super::UnQLite;
 
     #[test]
     fn create_temp() {
-        let _ = UnQlite::create_temp();
+        let _ = UnQLite::create_temp();
     }
 
     #[test]
     fn create_in_memory() {
-        let _ = UnQlite::create_in_memory();
+        let _ = UnQLite::create_in_memory();
     }
 
     #[test]
     fn from_readonly_memory() {
-        let _ = UnQlite::open_readonly(":mem:");
+        let _ = UnQLite::open_readonly(":mem:");
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::UnQlite;
+    use super::UnQLite;
 
     #[test]
     fn open() {
-        let _ = UnQlite::create_temp();
-        let _ = UnQlite::create_in_memory();
-        let _ = UnQlite::open_readonly(":mem:");
+        let _ = UnQLite::create_temp();
+        let _ = UnQLite::create_in_memory();
+        let _ = UnQLite::open_readonly(":mem:");
     }
 }

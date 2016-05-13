@@ -12,7 +12,7 @@ use ffi::{unqlite_kv_append,
           unqlite_kv_store};
 use ffi::constants::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
 
-use UnQlite;
+use UnQLite;
 use error::{Result, Wrap};
 
 /// Key-Value Store Interface
@@ -83,7 +83,7 @@ pub trait KV {
 }
 
 /// Key-Value Store Interface
-impl KV for UnQlite {
+impl KV for UnQLite {
     fn kv_store<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<()> {
         let key = key.as_ref();
         let value = value.as_ref();
@@ -181,12 +181,12 @@ impl KV for UnQlite {
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
-    use UnQlite;
+    use UnQLite;
     use super::KV;
 
     #[test]
     fn test_kv_store() {
-        let unqlite = UnQlite::create_temp();
+        let unqlite = UnQLite::create_temp();
         let _ = unqlite.kv_store("abc", "123").unwrap();
         let vec = [1u8, 2u8, 3u8];
         let _ = unqlite.kv_store(&vec, "123").unwrap();
@@ -215,7 +215,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn panic_kv_fetch_not_found() {
-        let unqlite = UnQlite::create_in_memory();
+        let unqlite = UnQLite::create_in_memory();
         unqlite.kv_fetch(&vec![4, 5, 6]).unwrap();
     }
 }

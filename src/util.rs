@@ -6,7 +6,7 @@ use std::os::raw::c_void;
 use ffi::{unqlite_util_load_mmaped_file, unqlite_util_random_num, unqlite_util_random_string,
           unqlite_util_release_mmaped_file};
 
-use UnQlite;
+use UnQLite;
 use error::{Result, Wrap};
 
 /// Utility interfaces.
@@ -22,7 +22,7 @@ pub trait Util {
     fn random_num(&self) -> u32;
 }
 
-impl Util for UnQlite {
+impl Util for UnQLite {
     fn random_string(&self, buf_size: u32) -> Vec<u8> {
         unsafe {
             let mut vec: Vec<u8> = Vec::with_capacity(buf_size as usize);
@@ -40,7 +40,7 @@ impl Util for UnQlite {
     }
 }
 
-/// Load memory-mapped file so that we can save it to UnQlite
+/// Load memory-mapped file so that we can save it to UnQLite
 pub fn load_mmaped_file<P: AsRef<Path>>(path: P) -> Result<Mmap> {
     unsafe {
         let path = path.as_ref();
@@ -58,7 +58,7 @@ pub fn load_mmaped_file<P: AsRef<Path>>(path: P) -> Result<Mmap> {
     }
 }
 
-/// UnQlite hosted memory mapped file
+/// UnQLite hosted memory mapped file
 pub struct Mmap {
     pub ptr: *mut c_void,
     pub size: i64,
@@ -76,18 +76,18 @@ mod tests {
     use std::io::Write;
     use tempfile::NamedTempFile;
 
-    use UnQlite;
+    use UnQLite;
     use super::*;
 
     #[test]
     fn test_random_string() {
-        let unqlite = UnQlite::create_in_memory();
+        let unqlite = UnQLite::create_in_memory();
         let _ = unqlite.random_string(32);
     }
 
     #[test]
     fn test_random_num() {
-        let _ = UnQlite::create_in_memory().random_num();
+        let _ = UnQLite::create_in_memory().random_num();
     }
 
     #[test]

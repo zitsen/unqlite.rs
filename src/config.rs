@@ -9,26 +9,25 @@ use ffi::constants::{UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG,
                      UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_JX9_ERR_LOG,
                      UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE};
 
-use UnQlite;
+use UnQLite;
 use error::Wrap;
 
 /// A `Trait` for configuration.
 ///
-/// This part of functions is about UnQlite's config options.
+/// This part of functions is about UnQLite's config options.
 ///
-/// The list is token from `unqlite_config` function, see also [here]
-/// (http://unqlite.org/c_api/unqlite_config.html).
+/// The list is token from `unqlite_config` function, see also [here][config].
 ///
 /// # Usage
 ///
 /// ```
 /// # extern crate unqlite;
 /// #
-/// # use unqlite::{UnQlite, Config};
+/// # use unqlite::{UnQLite, Config};
 /// #
 /// # #[cfg(feature = "enable-threads")]
 /// # fn main() {
-/// let unqlite = UnQlite::create_temp()
+/// let unqlite = UnQLite::create_temp()
 ///     .max_page_cache(4096u32)
 ///     .disable_auto_commit();
 /// println!("KV engine name: {}", unqlite.kv_name());
@@ -40,6 +39,8 @@ use error::Wrap;
 /// # #[cfg(not(feature = "enable-threads"))]
 /// # fn main() { }
 /// ```
+///
+/// [config]: http://unqlite.org/c_api/unqlite_config.html
 pub trait Config {
     /// Maximum raw pages to cache in memory.
     ///
@@ -78,7 +79,7 @@ pub trait Config {
     fn kv_name(&self) -> String;
 }
 
-impl Config for UnQlite {
+impl Config for UnQLite {
     fn max_page_cache(self, max: u32) -> Self {
         wrap_raw!(self, config, UNQLITE_CONFIG_MAX_PAGE_CACHE, max)
             .expect("set max page cache error");
@@ -157,24 +158,24 @@ fn from_chars_to_string(p: *mut c_char) -> String {
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
-    use UnQlite;
+    use UnQLite;
     use super::Config;
     #[test]
     fn max_page_cache() {
-        let unqlite = UnQlite::create_temp().max_page_cache(512000000);
+        let unqlite = UnQLite::create_temp().max_page_cache(512000000);
         let kv_name = unqlite.kv_name();
         assert_eq!(kv_name, String::from("mem"));
         assert_eq!(unqlite.err_log(), None);
     }
     #[test]
     fn disable_auto_commit() {
-        let _ = UnQlite::create_temp()
+        let _ = UnQLite::create_temp()
                           .max_page_cache(4096u32)
                           .disable_auto_commit();
     }
     #[test]
     #[should_panic]
     fn kv_engine_panic() {
-        let _ = UnQlite::create_temp().kv_engine("hash");
+        let _ = UnQLite::create_temp().kv_engine("hash");
     }
 }

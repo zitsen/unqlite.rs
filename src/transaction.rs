@@ -1,6 +1,6 @@
 use ffi::{unqlite_begin, unqlite_commit, unqlite_rollback};
 
-use UnQlite;
+use UnQLite;
 use error::{Result, Wrap};
 
 /// Manual Transaction Manager
@@ -42,7 +42,7 @@ pub trait Transaction {
     fn rollback(&self) -> Result<()>;
 }
 
-impl Transaction for UnQlite {
+impl Transaction for UnQLite {
     fn begin(&self) -> Result<()> {
         wrap_raw!(self, begin)
     }
@@ -62,12 +62,12 @@ impl Transaction for UnQlite {
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
-    use UnQlite;
+    use UnQLite;
     use super::Transaction;
     use Config;
     #[test]
     fn transaction() {
-        let uq = UnQlite::create_temp().disable_auto_commit();
+        let uq = UnQLite::create_temp().disable_auto_commit();
         uq.begin().expect("begin");
         uq.commit().expect("commit");
         uq.rollback().expect("rollback");
