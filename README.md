@@ -1,13 +1,13 @@
 # unqlite
 
-A high-level UnQlite database engine wrapper.
+A high-level UnQLite database engine wrapper.
 
 [![travis-badge][]][travis] [![release-badge][]][cargo] [![downloads]][cargo]
 [![docs-badge][]][docs] [![license-badge][]][cargo]
 
-NOTE: Some of the documents is stolen from [UnQlite Offical Website][unqlite].
+NOTE: Some of the documents is stolen from [UnQLite Offical Website][unqlite].
 
-## What is UnQlite?
+## What is UnQLite?
 
 >
 UnQLite is a software library which implements a *self-contained*, *serverless*,
@@ -24,22 +24,22 @@ architectures.
 
 ## Port to Rust
 
-This crate is high-level UnQlite database wrapper for Rust. A low-level bindings wrapper
+This crate is high-level UnQLite database wrapper for Rust. A low-level bindings wrapper
 is avaliable as a seperated crate: [unqlite-sys](https://crates.io/crates/unqlite-sys).
 
 ## Usage
 
-You can start with `UnQlite` constructors:
+You can start with `UnQLite` constructors:
 
 ```rust
 extern crate unqlite;
 
-use unqlite::{UnQlite, Config, KV, Cursor};
+use unqlite::{UnQLite, Config, KV, Cursor};
 
 fn main() {
     // The database memory is not handled by Rust, and the database is on-disk,
     // so `mut` is not neccessary.
-    let unqlite = UnQlite::create_temp();
+    let unqlite = UnQLite::create_temp();
     // Use any type that can use as `[u8]`
     unqlite.kv_store("key", "a long length value").unwrap();
     unqlite.kv_store("abc", [1,2,3]).unwrap();
