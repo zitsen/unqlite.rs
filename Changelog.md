@@ -1,3 +1,13 @@
+<a name="v1.1.1"></a>
+## v1.1.1 (2016-05-13)
+
+
+#### Bug Fixes
+
+* **unqlite-sys:**  update dependency to v1.0.0 ([9a0a05e2](9a0a05e2))
+
+
+
 <a name="v1.1.0"></a>
 ## v1.1.0 (2016-05-12)
 
