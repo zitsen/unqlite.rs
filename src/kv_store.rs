@@ -1,8 +1,7 @@
-use UnQlite;
-use error::{Result, Wrap};
-use libc::c_void;
 use std::mem;
+use std::os::raw::c_void;
 use std::ptr;
+
 use ffi::{unqlite_kv_append,
           unqlite_kv_config,
           unqlite_kv_delete,
@@ -12,6 +11,9 @@ use ffi::{unqlite_kv_append,
           unqlite_kv_fetch_callback,
           unqlite_kv_store};
 use ffi::constants::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
+
+use UnQlite;
+use error::{Result, Wrap};
 
 /// Key-Value Store Interface
 pub trait KV {
@@ -184,7 +186,7 @@ mod tests {
 
     #[test]
     fn test_kv_store() {
-        let mut unqlite = UnQlite::create_temp();
+        let unqlite = UnQlite::create_temp();
         let _ = unqlite.kv_store("abc", "123").unwrap();
         let vec = [1u8, 2u8, 3u8];
         let _ = unqlite.kv_store(&vec, "123").unwrap();
@@ -213,7 +215,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn panic_kv_fetch_not_found() {
-        let mut unqlite = UnQlite::create_in_memory();
+        let unqlite = UnQlite::create_in_memory();
         unqlite.kv_fetch(&vec![4, 5, 6]).unwrap();
     }
 }

@@ -1,12 +1,16 @@
-use UnQlite;
-use error::Wrap;
 use std::ffi::CString;
-use std::ptr;
 use std::mem;
+use std::os::raw::c_char;
+use std::ptr;
+use libc::strlen;
+
 use ffi::unqlite_config;
 use ffi::constants::{UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG,
                      UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_JX9_ERR_LOG,
                      UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE};
+
+use UnQlite;
+use error::Wrap;
 
 /// A `Trait` for configuration.
 ///
@@ -96,7 +100,7 @@ impl Config for UnQlite {
     }
 
     fn err_log(&self) -> Option<String> {
-        let log: *mut ::libc::c_char = unsafe { mem::uninitialized() };
+        let log: *mut c_char = unsafe { mem::uninitialized() };
         let len: i32 = unsafe { mem::uninitialized() };
 
         wrap_raw!(self, config, UNQLITE_CONFIG_ERR_LOG, &log, &len)
@@ -111,7 +115,7 @@ impl Config for UnQlite {
     }
 
     fn jx9_err_log(&self) -> Option<String> {
-        let log: *mut ::libc::c_char = unsafe { mem::uninitialized() };
+        let log: *mut c_char = unsafe { mem::uninitialized() };
         let len: i32 = unsafe { mem::uninitialized() };
         wrap_raw!(self, config, UNQLITE_CONFIG_JX9_ERR_LOG, &log, &len)
             .ok()
@@ -125,16 +129,16 @@ impl Config for UnQlite {
     }
 
     fn kv_name(&self) -> String {
-        let kv_name: *mut ::libc::c_char = unsafe { mem::uninitialized() };
+        let kv_name: *mut c_char = unsafe { mem::uninitialized() };
 
         wrap_raw!(self, config, UNQLITE_CONFIG_GET_KV_NAME, &kv_name).unwrap();
         from_chars_to_string(kv_name)
     }
 }
 
-fn from_chars_to_cstring(p: *mut ::libc::c_char) -> CString {
+fn from_chars_to_cstring(p: *mut c_char) -> CString {
     unsafe {
-        let len = ::libc::strlen(p);
+        let len = strlen(p);
         let (_, vec) = (0..len).fold((p, Vec::new()), |(p, mut vec), _| {
             let u: u8 = ptr::read(p) as u8;
             vec.push(u);
@@ -145,7 +149,7 @@ fn from_chars_to_cstring(p: *mut ::libc::c_char) -> CString {
     }
 }
 
-fn from_chars_to_string(p: *mut ::libc::c_char) -> String {
+fn from_chars_to_string(p: *mut c_char) -> String {
     from_chars_to_cstring(p).into_string().unwrap()
 }
 
@@ -164,7 +168,7 @@ mod tests {
     }
     #[test]
     fn disable_auto_commit() {
-        let unqlite = UnQlite::create_temp()
+        let _ = UnQlite::create_temp()
                           .max_page_cache(4096u32)
                           .disable_auto_commit();
     }

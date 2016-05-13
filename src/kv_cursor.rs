@@ -1,7 +1,6 @@
 use std::mem;
+use std::os::raw::c_void;
 use std::ptr::{self, Shared, Unique};
-
-use libc::c_void;
 
 use ffi::{unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_data_callback,
           unqlite_kv_cursor_delete_entry, unqlite_kv_cursor_first_entry, unqlite_kv_cursor_init,
@@ -129,6 +128,7 @@ impl Entry {
     ///
     /// ```ignore
     /// #[no_mangle]
+    /// #[allow(private_no_mangle_fns)]         // <-- this should be added to avoid warning
     /// pub extern fn print_data(ptr: *const c_void, len: u32, _data: *mut c_void) -> i32 {
     ///     // Do stuff with (ptr, len)
     ///     println!("Key/Value length is {}", len);
@@ -281,8 +281,8 @@ impl RawCursor {
         debug_assert!(self.is_valid());
 
         self.key_len().and_then(|mut len| {
-            let ptr = unsafe { ::libc::malloc(len as ::libc::size_t) };
-            wrap!(key, self.cursor(), ptr, &mut len)
+            let ptr = unsafe { ::libc::malloc(len as _) };
+            wrap!(key, self.cursor(), ptr as _, &mut len)
                 .map(|_| unsafe { Vec::from_raw_parts(ptr as _, len as _, len as _) })
         })
     }
@@ -298,7 +298,7 @@ impl RawCursor {
 
         self.value_len().and_then(|mut len| {
             let ptr = unsafe { ::libc::malloc(len as _) };
-            wrap!(data, self.cursor(), ptr, &mut len)
+            wrap!(data, self.cursor(), ptr as _, &mut len)
                 .map(|_| unsafe { Vec::from_raw_parts(ptr as _, len as _, len as _) })
         })
     }
@@ -345,10 +345,10 @@ impl Drop for RawCursor {
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
-    use {KV, UnQlite};
+    use std::os::raw::c_void;
     use std::ptr;
-    use libc::c_void;
     use super::*;
+    use {KV, UnQlite};
 
     macro_rules! _test_assert_eq {
         ($lhs:expr, ($rhs_0:expr, $rhs_1:expr)) => {
@@ -365,14 +365,15 @@ mod tests {
     }
 
     #[no_mangle]
-    pub extern fn print_data(ptr: *const c_void, len: u32, _data: *mut c_void) -> i32 {
+    #[allow(private_no_mangle_fns)]
+    pub extern fn print_data(ptr: *const c_void, _len: u32, _data: *mut c_void) -> i32 {
         println!("Key callback: {:?}", ptr);
         0
     }
 
     #[test]
     fn test_kv_cursor() {
-        let mut unqlite = UnQlite::create_in_memory();
+        let unqlite = UnQlite::create_in_memory();
         unqlite.kv_store("abc", "1").unwrap();
         unqlite.kv_store("cde", "3").unwrap();
         unqlite.kv_store("bcd", "2").unwrap();

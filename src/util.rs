@@ -1,7 +1,7 @@
 use std::path::Path;
 use std::ffi::CString;
 use std::mem;
-use libc::c_void;
+use std::os::raw::c_void;
 
 use ffi::{unqlite_util_load_mmaped_file, unqlite_util_random_num, unqlite_util_random_string,
           unqlite_util_release_mmaped_file};

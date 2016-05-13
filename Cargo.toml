@@ -12,7 +12,7 @@ keywords = ["unqlite", "kv", "nosql"]
 
 [dependencies]
 libc = "0.2"
-unqlite-sys = "0.3.2"
+unqlite-sys = "^1.0.0"
 
 [dev-dependencies]
 tempfile = "2.1.3"
