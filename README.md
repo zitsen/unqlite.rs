@@ -5,7 +5,7 @@ A high-level UnQLite database engine wrapper.
 [![travis-badge][]][travis] [![release-badge][]][cargo] [![downloads]][cargo]
 [![docs-badge][]][docs] [![license-badge][]][cargo]
 
-NOTE: Some of the documents is stolen from [UnQLite Offical Website][unqlite].
+NOTE: Some of the documents is stolen from [UnQLite Official Website][unqlite].
 
 ## What is UnQLite?
 
