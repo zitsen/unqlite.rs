@@ -1,3 +1,13 @@
+<a name="v1.2.1"></a>
+## v1.2.1 (2016-05-25)
+
+
+#### Bug Fixes
+
+* **cursor:**  fix delete error when reach the last ([9664f93d](9664f93d))
+
+
+
 <a name="v1.2.0"></a>
 ## v1.2.0 (2016-05-13)
 
