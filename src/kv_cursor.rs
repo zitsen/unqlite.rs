@@ -173,7 +173,7 @@ impl Entry {
 
     /// Delete the pointed record.
     pub fn delete(self) -> Option<Self> {
-        self.0.delete().map(Entry).ok()
+        self.0.delete().ok().and_then(|raw| raw.valid()).map(Entry)
     }
 }
 
@@ -403,6 +403,22 @@ mod tests {
             let current = entry.expect("valid entry");
             println!("{:?}", current.key_value());
             entry = current.prev();
+        }
+    }
+
+    #[test]
+    fn test_delete() {
+        let uq = UnQLite::create_temp();
+        uq.kv_store("abc", "1");
+        let mut entry = uq.first();
+        loop {
+            if entry.is_none() {
+                break;
+            }
+
+            let current = entry.expect("valie_entry");
+            println!("{:?}", current.key_value());
+            entry = current.delete();
         }
     }
 }
