@@ -2,13 +2,13 @@ use ffi::constants;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum OpenMode {
     ReadOnly,
-    //ReadWrite,
+    // ReadWrite,
     Create,
-    //Exclusive,
+    // Exclusive,
     TempDB,
-    //NoMutex,
-    //OmitJournaling,
-    //InMemory,
+    // NoMutex,
+    // OmitJournaling,
+    // InMemory,
     MMap,
 }
 
@@ -18,13 +18,13 @@ impl Into<u32> for OpenMode {
     fn into(self) -> u32 {
         match self {
             ReadOnly => constants::UNQLITE_OPEN_READONLY,
-            //ReadWrite => constants::UNQLITE_OPEN_READWRITE,
+            // ReadWrite => constants::UNQLITE_OPEN_READWRITE,
             Create => constants::UNQLITE_OPEN_CREATE,
-            //Exclusive => constants::UNQLITE_OPEN_EXCLUSIVE,
+            // Exclusive => constants::UNQLITE_OPEN_EXCLUSIVE,
             TempDB => constants::UNQLITE_OPEN_TEMP_DB,
-            //NoMutex => constants::UNQLITE_OPEN_NOMUTEX,
-            //OmitJournaling => constants::UNQLITE_OPEN_OMIT_JOURNALING,
-            //InMemory => constants::UNQLITE_OPEN_IN_MEMORY,
+            // NoMutex => constants::UNQLITE_OPEN_NOMUTEX,
+            // OmitJournaling => constants::UNQLITE_OPEN_OMIT_JOURNALING,
+            // InMemory => constants::UNQLITE_OPEN_IN_MEMORY,
             MMap => constants::UNQLITE_OPEN_MMAP | constants::UNQLITE_OPEN_READONLY,
         }
     }

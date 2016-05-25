@@ -366,7 +366,7 @@ mod tests {
 
     #[no_mangle]
     #[allow(private_no_mangle_fns)]
-    pub extern fn print_data(ptr: *const c_void, _len: u32, _data: *mut c_void) -> i32 {
+    pub extern "C" fn print_data(ptr: *const c_void, _len: u32, _data: *mut c_void) -> i32 {
         println!("Key callback: {:?}", ptr);
         0
     }

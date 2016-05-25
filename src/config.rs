@@ -170,8 +170,8 @@ mod tests {
     #[test]
     fn disable_auto_commit() {
         let _ = UnQLite::create_temp()
-                          .max_page_cache(4096u32)
-                          .disable_auto_commit();
+                    .max_page_cache(4096u32)
+                    .disable_auto_commit();
     }
     #[test]
     #[should_panic]
