@@ -65,7 +65,7 @@ pub trait Config {
 
     /// The database error log is stored in an internal buffer. When something goes wrong during a
     /// commit, rollback, store, append operation, a human-readable error message is generated to
-    /// help clients diagnostic the problem. This option can be used to point to that buffer.
+    /// help clients diagnose the problem. This option can be used to point to that buffer.
     fn err_log(&self) -> Option<String>;
 
     /// When something goes wrong during compilation of the target Jx9 script due to an erroneous
