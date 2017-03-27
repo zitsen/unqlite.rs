@@ -332,7 +332,7 @@ impl RawCursor {
         *self.cursor
     }
     unsafe fn engine(&self) -> *mut unqlite {
-        *self.engine
+        *self.engine as *mut ::ffi::unqlite
     }
 }
 
