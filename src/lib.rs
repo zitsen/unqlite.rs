@@ -258,7 +258,7 @@ impl UnQLite {
     }
 
     unsafe fn as_raw_mut_ptr(&self) -> *mut ::ffi::unqlite {
-        *self.engine
+        *self.engine as *mut ::ffi::unqlite
     }
 }
 
