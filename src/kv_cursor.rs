@@ -329,10 +329,10 @@ impl RawCursor {
     }
 
     unsafe fn cursor(&self) -> *mut unqlite_kv_cursor {
-        *self.cursor
+        self.cursor.as_ptr()
     }
     unsafe fn engine(&self) -> *mut unqlite {
-        *self.engine as *mut ::ffi::unqlite
+        self.engine.as_ptr()
     }
 }
 
@@ -409,7 +409,7 @@ mod tests {
     #[test]
     fn test_delete() {
         let uq = UnQLite::create_temp();
-        uq.kv_store("abc", "1");
+        uq.kv_store("abc", "1").unwrap();
         let mut entry = uq.first();
         loop {
             if entry.is_none() {
