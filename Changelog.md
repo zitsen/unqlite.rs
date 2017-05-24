@@ -1,3 +1,13 @@
+<a name="v1.2.2"></a>
+## v1.2.2 (2017-05-24)
+
+
+#### Bug Fixes
+
+*   fix in case of Shared.as_mut_ptr deprecation ([5a90c035](5a90c035))
+
+
+
 <a name="v1.2.1"></a>
 ## v1.2.1 (2016-05-25)
 
