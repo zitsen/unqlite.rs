@@ -278,6 +278,7 @@ mod util;
 mod transaction;
 mod kv_store;
 mod kv_cursor;
+pub mod document;
 
 use self::openmode::OpenMode;
 
