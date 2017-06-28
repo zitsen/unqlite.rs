@@ -1,3 +1,13 @@
+<a name="v1.3.0"></a>
+## v1.3.0 (2017-06-28)
+
+
+#### Features
+
+* **api:**  document store interface (json via jx9) ([276eb35c](276eb35c))
+
+
+
 <a name="v1.2.2"></a>
 ## v1.2.2 (2017-05-24)
 
