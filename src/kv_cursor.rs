@@ -217,7 +217,7 @@ impl RawCursor {
         wrap!(init, unqlite.as_raw_mut_ptr(), &mut cursor).map(|_| {
             RawCursor {
                 engine: unqlite.engine,
-                cursor: unsafe { Unique::new(cursor) },
+                cursor: unsafe { Unique::new_unchecked(cursor) },
             }
         })
     }

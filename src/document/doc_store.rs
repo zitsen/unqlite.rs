@@ -96,7 +96,7 @@ pub struct UnQLiteVm {
 impl UnQLiteVm {
     fn new(vm: *mut unqlite_vm) -> Self {
         UnQLiteVm { 
-            native: unsafe { Shared::new(vm) }, 
+            native: unsafe { Shared::new_unchecked(vm) }, 
             executed: false,
             output: None,
             names: Vec::new(),

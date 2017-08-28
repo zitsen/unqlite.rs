@@ -146,7 +146,7 @@ impl UnQLite {
         let filename = filename.as_ref();
         let filename = try!(CString::new(filename));
         wrap!(open, &mut db, filename.as_ptr(), mode.into())
-            .map(|_| UnQLite { engine: unsafe { Shared::new(db) } })
+            .map(|_| UnQLite { engine: unsafe { Shared::new_unchecked(db) } })
     }
 
     /// Create UnQLite database as `filename`.
