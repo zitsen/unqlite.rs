@@ -1,3 +1,13 @@
+<a name="v1.3.1"></a>
+## v1.3.1 (2017-08-28)
+
+
+#### Bug Fixes
+
+*   fix error as Unique/Shared syntax changed ([1ce81552](1ce81552), closes [#5](5))
+
+
+
 <a name="v1.3.0"></a>
 ## v1.3.0 (2017-06-28)
 
