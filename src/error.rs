@@ -16,6 +16,8 @@ pub enum Error {
     Other(Box<error::Error>),
 }
 
+unsafe impl Send for Error {}
+
 impl From<Custom> for Error {
     fn from(err: Custom) -> Error {
         Error::Custom(err)
