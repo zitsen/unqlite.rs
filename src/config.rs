@@ -1,16 +1,14 @@
+use UnQLite;
+use error::Wrap;
+use ffi::constants::{UNQLITE_CONFIG_JX9_ERR_LOG, UNQLITE_CONFIG_DISABLE_AUTO_COMMIT,
+                     UNQLITE_CONFIG_ERR_LOG, UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_KV_ENGINE,
+                     UNQLITE_CONFIG_MAX_PAGE_CACHE};
+use ffi::unqlite_config;
+use libc::strlen;
 use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_char;
 use std::ptr;
-use libc::strlen;
-
-use ffi::unqlite_config;
-use ffi::constants::{UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG,
-                     UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_JX9_ERR_LOG,
-                     UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE};
-
-use UnQLite;
-use error::Wrap;
 
 /// A `Trait` for configuration.
 ///
@@ -92,11 +90,12 @@ impl Config for UnQLite {
     }
 
     fn kv_engine<S: Into<Vec<u8>>>(self, name: S) -> Self {
-        wrap_raw!(self,
-                  config,
-                  UNQLITE_CONFIG_KV_ENGINE,
-                  CString::new(name).expect("KV engine error").into_raw())
-            .expect("config KV engine");
+        wrap_raw!(
+            self,
+            config,
+            UNQLITE_CONFIG_KV_ENGINE,
+            CString::new(name).expect("KV engine error").into_raw()
+        ).expect("config KV engine");
         self
     }
 
@@ -158,8 +157,8 @@ fn from_chars_to_string(p: *mut c_char) -> String {
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
-    use UnQLite;
     use super::Config;
+    use UnQLite;
     #[test]
     fn max_page_cache() {
         let unqlite = UnQLite::create_temp().max_page_cache(512000000);
@@ -170,8 +169,8 @@ mod tests {
     #[test]
     fn disable_auto_commit() {
         let _ = UnQLite::create_temp()
-                    .max_page_cache(4096u32)
-                    .disable_auto_commit();
+            .max_page_cache(4096u32)
+            .disable_auto_commit();
     }
     #[test]
     #[should_panic]

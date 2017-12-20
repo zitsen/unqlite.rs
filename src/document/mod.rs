@@ -8,4 +8,4 @@ mod vm_value;
 mod tests;
 
 pub use self::doc_store::{Jx9, UnQLiteVm};
-pub use self::vm_value::{Value, Map};
+pub use self::vm_value::{Map, Value};

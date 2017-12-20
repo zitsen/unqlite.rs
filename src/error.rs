@@ -1,8 +1,7 @@
+use ffi::constants::*;
 use std::error;
 use std::fmt;
 use std::result;
-
-use ffi::constants::*;
 
 /// Custom `Result` type.
 pub type Result<T> = result::Result<T, Error>;
@@ -106,8 +105,7 @@ pub enum ErrorKind {
     READ_ONLY,
     /// Locking protocol error
     LOCKERR,
-    #[doc(hidden)]
-    __Nonexhaustive,
+    #[doc(hidden)] __Nonexhaustive,
 }
 
 impl From<i32> for ErrorKind {
@@ -180,13 +178,12 @@ impl Custom {
         let kind = ErrorKind::from(result);
         match kind {
             ErrorKind::OK => Ok(()),
-            _ => {
-                Err(Custom {
-                        kind: kind,
-                        raw: result,
-                    }
-                    .into())
-            }
+            _ => Err(
+                Custom {
+                    kind: kind,
+                    raw: result,
+                }.into(),
+            ),
         }
     }
 

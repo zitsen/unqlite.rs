@@ -79,20 +79,18 @@
 #![feature(unique)]
 #![feature(concat_idents)]
 
-extern crate unqlite_sys as ffi;
 extern crate libc;
+extern crate unqlite_sys as ffi;
 
 #[cfg(test)]
 extern crate tempfile;
 
+pub use error::{Error, Result};
+use error::Wrap;
+use ffi::{unqlite_close, unqlite_open};
 use std::ffi::CString;
 use std::mem;
 use std::ptr::Shared;
-
-use ffi::{unqlite_close, unqlite_open};
-
-use error::Wrap;
-pub use error::{Error, Result};
 
 /// UnQLite database entry point.
 ///
@@ -145,8 +143,11 @@ impl UnQLite {
         let mut db: *mut ::ffi::unqlite = unsafe { mem::uninitialized() };
         let filename = filename.as_ref();
         let filename = try!(CString::new(filename));
-        wrap!(open, &mut db, filename.as_ptr(), mode.into())
-            .map(|_| UnQLite { engine: unsafe { Shared::new_unchecked(db) } })
+        wrap!(open, &mut db, filename.as_ptr(), mode.into()).map(|_| {
+            UnQLite {
+                engine: unsafe { Shared::new_unchecked(db) },
+            }
+        })
     }
 
     /// Create UnQLite database as `filename`.
@@ -280,13 +281,12 @@ mod kv_store;
 mod kv_cursor;
 pub mod document;
 
-use self::openmode::OpenMode;
-
 pub use self::config::Config;
+pub use self::kv_cursor::*;
+pub use self::kv_store::*;
+use self::openmode::OpenMode;
 pub use self::transaction::Transaction;
 pub use self::util::*;
-pub use self::kv_store::*;
-pub use self::kv_cursor::*;
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]

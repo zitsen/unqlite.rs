@@ -1,7 +1,5 @@
-use std::mem;
-use std::os::raw::c_void;
-use std::ptr;
-
+use UnQLite;
+use error::{Result, Wrap};
 use ffi::{unqlite_kv_append,
           unqlite_kv_config,
           unqlite_kv_delete,
@@ -11,9 +9,9 @@ use ffi::{unqlite_kv_append,
           unqlite_kv_fetch_callback,
           unqlite_kv_store};
 use ffi::constants::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
-
-use UnQLite;
-use error::{Result, Wrap};
+use std::mem;
+use std::os::raw::c_void;
+use std::ptr;
 
 /// Key-Value Store Interface
 pub trait KV {
@@ -54,22 +52,21 @@ pub trait KV {
     fn kv_fetch<K: AsRef<[u8]>>(&self, key: K) -> Result<Vec<u8>>;
 
     /// Fetch a record from the database and invoke the supplied callback to consume its data.
-    fn kv_fetch_callback<K: AsRef<[u8]>>(&self,
-                                         key: K,
-                                         consumer: extern "C" fn(data: *const c_void,
-                                                                 len: u32,
-                                                                 user_data: *mut c_void)
-                                                                 -> i32)
-                                         -> Result<()>;
+    fn kv_fetch_callback<K: AsRef<[u8]>>(
+        &self,
+        key: K,
+        consumer: extern "C" fn(data: *const c_void, len: u32, user_data: *mut c_void) -> i32,
+    ) -> Result<()>;
 
     /// Configure the hash function of the underlying Key/Value (KV) storage engine.
     ///
     /// Specify a hash function to be used instead of the built-in hash function. This option
     /// accepts a single argument which is a pointer to the client hash function.
     /// Note that the built-in hash function (DJB) is recommended for most purposes.
-    fn kv_config_hash(&self,
-                      hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
-                      -> Result<()>;
+    fn kv_config_hash(
+        &self,
+        hash: extern "C" fn(key: *const c_void, len: u32) -> u32,
+    ) -> Result<()>;
 
     /// Configure the compare function of the underlying Key/Value (KV) storage engine.
     ///
@@ -77,9 +74,8 @@ pub trait KV {
     /// option accepts a single argument which is a pointer to the client comparison function.
     /// Note that the built-in comparison function (Tuned memcmp() implementation) is recommended
     /// for most purposes.
-    fn kv_config_cmp(&self,
-                     hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
-                     -> Result<()>;
+    fn kv_config_cmp(&self, hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
+        -> Result<()>;
 }
 
 /// Key-Value Store Interface
@@ -87,30 +83,36 @@ impl KV for UnQLite {
     fn kv_store<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<()> {
         let key = key.as_ref();
         let value = value.as_ref();
-        wrap!(kv_store,
-              self.as_raw_mut_ptr(),
-              key.as_ptr() as _,
-              key.len() as _,
-              value.as_ptr() as _,
-              value.len() as _)
+        wrap!(
+            kv_store,
+            self.as_raw_mut_ptr(),
+            key.as_ptr() as _,
+            key.len() as _,
+            value.as_ptr() as _,
+            value.len() as _
+        )
     }
 
     fn kv_append<K: AsRef<[u8]>, V: AsRef<[u8]>>(&self, key: K, value: V) -> Result<()> {
         let key = key.as_ref();
         let value = value.as_ref();
-        wrap!(kv_append,
-              self.as_raw_mut_ptr(),
-              key.as_ptr() as _,
-              key.len() as _,
-              value.as_ptr() as _,
-              value.len() as _)
+        wrap!(
+            kv_append,
+            self.as_raw_mut_ptr(),
+            key.as_ptr() as _,
+            key.len() as _,
+            value.as_ptr() as _,
+            value.len() as _
+        )
     }
 
     fn kv_delete<K: AsRef<[u8]>>(&self, key: K) -> Result<()> {
-        wrap!(kv_delete,
-              self.as_raw_mut_ptr(),
-              key.as_ref().as_ptr() as _,
-              key.as_ref().len() as _)
+        wrap!(
+            kv_delete,
+            self.as_raw_mut_ptr(),
+            key.as_ref().as_ptr() as _,
+            key.as_ref().len() as _
+        )
     }
 
     fn kv_contains<K: AsRef<[u8]>>(&self, key: K) -> bool {
@@ -120,13 +122,14 @@ impl KV for UnQLite {
     fn kv_fetch_length<K: AsRef<[u8]>>(&self, key: K) -> Result<i64> {
         let key = key.as_ref();
         let mut len = 0i64;
-        wrap!(kv_fetch,
-              self.as_raw_mut_ptr(),
-              key.as_ptr() as _,
-              key.len() as _,
-              ptr::null_mut(),
-              &mut len)
-            .map(|_| len)
+        wrap!(
+            kv_fetch,
+            self.as_raw_mut_ptr(),
+            key.as_ptr() as _,
+            key.len() as _,
+            ptr::null_mut(),
+            &mut len
+        ).map(|_| len)
     }
 
     fn kv_fetch<K: AsRef<[u8]>>(&self, key: K) -> Result<Vec<u8>> {
@@ -136,53 +139,59 @@ impl KV for UnQLite {
         let cap = buf.capacity();
         let ptr = buf.as_mut_ptr();
         mem::forget(buf);
-        wrap!(kv_fetch,
-              self.as_raw_mut_ptr(),
-              key.as_ptr() as _,
-              key.len() as _,
-              ptr as _,
-              &mut len)
-            .map(|_| unsafe { Vec::from_raw_parts(ptr, len as usize, cap) })
+        wrap!(
+            kv_fetch,
+            self.as_raw_mut_ptr(),
+            key.as_ptr() as _,
+            key.len() as _,
+            ptr as _,
+            &mut len
+        ).map(|_| unsafe { Vec::from_raw_parts(ptr, len as usize, cap) })
     }
 
-    fn kv_fetch_callback<K: AsRef<[u8]>>(&self,
-                                         key: K,
-                                         consumer: extern "C" fn(data: *const c_void,
-                                                                 len: u32,
-                                                                 user_data: *mut c_void)
-                                                                 -> i32)
-                                         -> Result<()> {
+    fn kv_fetch_callback<K: AsRef<[u8]>>(
+        &self,
+        key: K,
+        consumer: extern "C" fn(data: *const c_void, len: u32, user_data: *mut c_void) -> i32,
+    ) -> Result<()> {
         let key = key.as_ref();
-        wrap!(kv_fetch_callback,
-              self.as_raw_mut_ptr(),
-              key.as_ptr() as _,
-              key.len() as i32,
-              Some(consumer),
-              ptr::null_mut())
+        wrap!(
+            kv_fetch_callback,
+            self.as_raw_mut_ptr(),
+            key.as_ptr() as _,
+            key.len() as i32,
+            Some(consumer),
+            ptr::null_mut()
+        )
     }
 
-    fn kv_config_hash(&self,
-                      hash: extern "C" fn(key: *const c_void, len: u32) -> u32)
-                      -> Result<()> {
-        wrap!(kv_config,
-              self.as_raw_mut_ptr(),
-              UNQLITE_KV_CONFIG_HASH_FUNC,
-              hash)
+    fn kv_config_hash(
+        &self,
+        hash: extern "C" fn(key: *const c_void, len: u32) -> u32,
+    ) -> Result<()> {
+        wrap!(
+            kv_config,
+            self.as_raw_mut_ptr(),
+            UNQLITE_KV_CONFIG_HASH_FUNC,
+            hash
+        )
     }
 
     fn kv_config_cmp(&self, cmp: extern "C" fn(key: *const c_void, len: u32) -> u32) -> Result<()> {
-        wrap!(kv_config,
-              self.as_raw_mut_ptr(),
-              UNQLITE_KV_CONFIG_CMP_FUNC,
-              cmp)
+        wrap!(
+            kv_config,
+            self.as_raw_mut_ptr(),
+            UNQLITE_KV_CONFIG_CMP_FUNC,
+            cmp
+        )
     }
 }
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
-    use UnQLite;
     use super::KV;
+    use UnQLite;
 
     #[test]
     fn test_kv_store() {
@@ -190,7 +199,9 @@ mod tests {
         let _ = unqlite.kv_store("abc", "123").unwrap();
         let vec = [1u8, 2u8, 3u8];
         let _ = unqlite.kv_store(&vec, "123").unwrap();
-        let _ = unqlite.kv_store(&vec![4, 5, 6], &String::from("哈哈")).unwrap();
+        let _ = unqlite
+            .kv_store(&vec![4, 5, 6], &String::from("哈哈"))
+            .unwrap();
 
         let value = unqlite.kv_fetch_length("abc");
         assert!(value.is_ok());
@@ -202,8 +213,10 @@ mod tests {
         assert_eq!(value, [49, 50, 51]);
 
         let value = unqlite.kv_fetch(&vec![4, 5, 6]).unwrap();
-        assert_eq!(unsafe { String::from_utf8_unchecked(value) },
-                   String::from("哈哈"));
+        assert_eq!(
+            unsafe { String::from_utf8_unchecked(value) },
+            String::from("哈哈")
+        );
 
         unqlite.kv_delete("abc").unwrap();
         assert!(!unqlite.kv_contains("abc"));

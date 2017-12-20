@@ -1,7 +1,6 @@
-use ffi::{unqlite_begin, unqlite_commit, unqlite_rollback};
-
 use UnQLite;
 use error::{Result, Wrap};
+use ffi::{unqlite_begin, unqlite_commit, unqlite_rollback};
 
 /// Manual Transaction Manager
 ///
@@ -62,9 +61,9 @@ impl Transaction for UnQLite {
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
-    use UnQLite;
     use super::Transaction;
     use Config;
+    use UnQLite;
     #[test]
     fn transaction() {
         let uq = UnQLite::create_temp().disable_auto_commit();

@@ -1,16 +1,14 @@
-use std::mem;
-use std::os::raw::c_void;
-use std::ptr::{self, Shared, Unique};
-
+use UnQLite;
+use error::{Result, Wrap};
 use ffi::{unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_data_callback,
           unqlite_kv_cursor_delete_entry, unqlite_kv_cursor_first_entry, unqlite_kv_cursor_init,
           unqlite_kv_cursor_key, unqlite_kv_cursor_key_callback, unqlite_kv_cursor_last_entry,
           unqlite_kv_cursor_next_entry, unqlite_kv_cursor_prev_entry, unqlite_kv_cursor_release,
           unqlite_kv_cursor_reset, unqlite_kv_cursor_seek, unqlite_kv_cursor_valid_entry};
 use ffi::constants::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
-
-use UnQLite;
-use error::{Result, Wrap};
+use std::mem;
+use std::os::raw::c_void;
+use std::ptr::{self, Shared, Unique};
 
 /// Cursor iterator interfaces.
 ///
@@ -135,16 +133,20 @@ impl Entry {
     ///     0
     /// }
     /// ```
-    pub fn key_callback(&self,
-                        func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
-                        data: *mut c_void) {
+    pub fn key_callback(
+        &self,
+        func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
+        data: *mut c_void,
+    ) {
         self.0.key_callback(func, data)
     }
 
     /// Use mangle function for callback of value
-    pub fn value_callback(&self,
-                          func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
-                          data: *mut c_void) {
+    pub fn value_callback(
+        &self,
+        func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
+        data: *mut c_void,
+    ) {
         self.0.value_callback(func, data)
     }
 
@@ -153,22 +155,14 @@ impl Entry {
     ///
     /// Returns `None` if there's no valid cursors.
     pub fn next(self) -> Option<Self> {
-        self.0
-            .next()
-            .ok()
-            .and_then(|raw| raw.valid())
-            .map(Entry)
+        self.0.next().ok().and_then(|raw| raw.valid()).map(Entry)
     }
 
     /// Goto previous entry.
     ///
     /// Returns `None` if no valid cursors.
     pub fn prev(self) -> Option<Self> {
-        self.0
-            .prev()
-            .ok()
-            .and_then(|raw| raw.valid())
-            .map(Entry)
+        self.0.prev().ok().and_then(|raw| raw.valid()).map(Entry)
     }
 
     /// Delete the pointed record.
@@ -240,11 +234,13 @@ impl RawCursor {
     /// * prev
     ///
     pub fn seek<Key: AsRef<[u8]>>(self, key: Key, pos: Direction) -> Result<Self> {
-        wrap_in_place!(self,
-                       seek,
-                       key.as_ref().as_ptr() as _,
-                       key.as_ref().len() as _,
-                       pos as _)
+        wrap_in_place!(
+            self,
+            seek,
+            key.as_ref().as_ptr() as _,
+            key.as_ref().len() as _,
+            pos as _
+        )
     }
     pub fn first(self) -> Result<Self> {
         wrap_in_place!(self, first_entry)
@@ -282,14 +278,17 @@ impl RawCursor {
 
         self.key_len().and_then(|mut len| {
             let ptr = unsafe { ::libc::malloc(len as _) };
-            wrap!(key, self.cursor(), ptr as _, &mut len)
-                .map(|_| unsafe { Vec::from_raw_parts(ptr as _, len as _, len as _) })
+            wrap!(key, self.cursor(), ptr as _, &mut len).map(|_| unsafe {
+                Vec::from_raw_parts(ptr as _, len as _, len as _)
+            })
         })
     }
 
-    pub fn key_callback(&self,
-                        func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
-                        data: *mut c_void) {
+    pub fn key_callback(
+        &self,
+        func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
+        data: *mut c_void,
+    ) {
         eval!(key_callback, self.cursor(), Some(func), data);
     }
 
@@ -298,19 +297,23 @@ impl RawCursor {
 
         self.value_len().and_then(|mut len| {
             let ptr = unsafe { ::libc::malloc(len as _) };
-            wrap!(data, self.cursor(), ptr as _, &mut len)
-                .map(|_| unsafe { Vec::from_raw_parts(ptr as _, len as _, len as _) })
+            wrap!(data, self.cursor(), ptr as _, &mut len).map(|_| unsafe {
+                Vec::from_raw_parts(ptr as _, len as _, len as _)
+            })
         })
     }
 
-    pub fn value_callback(&self,
-                          func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
-                          data: *mut c_void) {
+    pub fn value_callback(
+        &self,
+        func: extern "C" fn(*const c_void, u32, *mut c_void) -> i32,
+        data: *mut c_void,
+    ) {
         eval!(data_callback, self.cursor(), Some(func), data);
     }
 
     pub fn key_value(&self) -> Result<(Vec<u8>, Vec<u8>)> {
-        self.key().and_then(|key| self.value().map(|value| (key, value)))
+        self.key()
+            .and_then(|key| self.value().map(|value| (key, value)))
     }
 
 
@@ -345,10 +348,10 @@ impl Drop for RawCursor {
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]
 mod tests {
+    use super::*;
+    use {UnQLite, KV};
     use std::os::raw::c_void;
     use std::ptr;
-    use super::*;
-    use {KV, UnQLite};
 
     macro_rules! _test_assert_eq {
         ($lhs:expr, ($rhs_0:expr, $rhs_1:expr)) => {
