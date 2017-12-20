@@ -1,3 +1,13 @@
+<a name="v1.3.2"></a>
+## v1.3.2 (2017-12-20)
+
+
+#### Bug Fixes
+
+*   implement `Send` and `Sync` for `Error` ([c3c93972](c3c93972))
+
+
+
 <a name="v1.3.1"></a>
 ## v1.3.1 (2017-08-28)
 
