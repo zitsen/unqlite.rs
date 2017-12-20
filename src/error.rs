@@ -16,6 +16,7 @@ pub enum Error {
 }
 
 unsafe impl Send for Error {}
+unsafe impl Sync for Error {}
 
 impl From<Custom> for Error {
     fn from(err: Custom) -> Error {
