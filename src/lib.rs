@@ -75,8 +75,6 @@
 //! [docs]: https://zitsen.github.io/unqlite.rs
 //! [license-badge]: https://img.shields.io/crates/l/unqlite.svg?style=flat-square
 
-#![feature(shared)]
-#![feature(unique)]
 #![feature(concat_idents)]
 
 extern crate libc;
@@ -90,7 +88,7 @@ use error::Wrap;
 use ffi::{unqlite_close, unqlite_open};
 use std::ffi::CString;
 use std::mem;
-use std::ptr::Shared;
+use std::ptr::NonNull;
 
 /// UnQLite database entry point.
 ///
@@ -106,7 +104,7 @@ use std::ptr::Shared;
 /// [`open_readonly`](#method.open_readonly) | Open the database in a read-only mode.
 ///
 pub struct UnQLite {
-    engine: Shared<::ffi::unqlite>,
+    engine: NonNull<::ffi::unqlite>,
 }
 
 macro_rules! eval {
@@ -145,7 +143,7 @@ impl UnQLite {
         let filename = try!(CString::new(filename));
         wrap!(open, &mut db, filename.as_ptr(), mode.into()).map(|_| {
             UnQLite {
-                engine: unsafe { Shared::new_unchecked(db) },
+                engine: unsafe { NonNull::new_unchecked(db) },
             }
         })
     }

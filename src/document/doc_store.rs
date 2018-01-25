@@ -14,7 +14,7 @@ use ffi::constants::{UNQLITE_OK, UNQLITE_VM_CONFIG_ARGV_ENTRY, UNQLITE_VM_CONFIG
 use std::cell::RefCell;
 use std::ffi::CString;
 use std::os::raw::c_void;
-use std::ptr::{null, null_mut, Shared};
+use std::ptr::{null, null_mut, NonNull};
 use std::rc::Rc;
 use std::slice;
 use std::sync::mpsc;
@@ -56,7 +56,7 @@ impl Jx9 for UnQLite {
 /// related [functions](https://unqlite.org/c_api_func.html)
 /// and [configuration](https://unqlite.org/c_api/unqlite_vm_config.html).
 pub struct UnQLiteVm {
-    native: Shared<unqlite_vm>,
+    native: NonNull<unqlite_vm>,
     executed: bool,
     output: Option<RefCell<Sender>>,
     names: Vec<Rc<CString>>,
@@ -66,7 +66,7 @@ pub struct UnQLiteVm {
 impl UnQLiteVm {
     fn new(vm: *mut unqlite_vm) -> Self {
         UnQLiteVm {
-            native: unsafe { Shared::new_unchecked(vm) },
+            native: unsafe { NonNull::new_unchecked(vm) },
             executed: false,
             output: None,
             names: Vec::new(),
@@ -321,7 +321,6 @@ extern "C" fn callback_to_channel(data: *const c_void, len: u32, sender: *mut c_
     let mut msg = Vec::with_capacity(len as usize);
     msg.extend_from_slice(slice);
 
-    #[allow(match_same_arms)]
     match sender.send(msg) {
         Ok(_) => UNQLITE_OK,
 

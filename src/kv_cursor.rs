@@ -8,7 +8,7 @@ use ffi::{unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_
 use ffi::constants::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
 use std::mem;
 use std::os::raw::c_void;
-use std::ptr::{self, Shared, Unique};
+use std::ptr::{self, NonNull};
 
 /// Cursor iterator interfaces.
 ///
@@ -179,8 +179,8 @@ pub enum Direction {
 }
 
 struct RawCursor {
-    engine: Shared<unqlite>,
-    cursor: Unique<unqlite_kv_cursor>,
+    engine: NonNull<unqlite>,
+    cursor: NonNull<unqlite_kv_cursor>,
 }
 
 macro_rules! eval {
@@ -211,7 +211,7 @@ impl RawCursor {
         wrap!(init, unqlite.as_raw_mut_ptr(), &mut cursor).map(|_| {
             RawCursor {
                 engine: unqlite.engine,
-                cursor: unsafe { Unique::new_unchecked(cursor) },
+                cursor: unsafe { NonNull::new_unchecked(cursor) },
             }
         })
     }
