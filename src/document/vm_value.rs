@@ -29,9 +29,8 @@ impl Value {
     }
 
     pub fn is_scalar(&self) -> bool {
-        match self {
-            &Value::Array(_) => false,
-            &Value::Object(_) => false,
+        match *self {
+            Value::Array(_) | Value::Object(_) => false,
             _ => true,
         }
     }
@@ -78,7 +77,7 @@ pub unsafe fn to_value(ptr: *mut unqlite_value) -> Option<Value> {
     } else if unqlite_value_is_string(ptr) == TRUE {
         let string = value_to_string(ptr);
         debug_assert!(string.is_some());
-        string.map(|s| Value::String(s))
+        string.map(Value::String)
     } else if unqlite_value_is_json_object(ptr) == TRUE {
         let size: c_int = unqlite_array_count(ptr);
         debug_assert!(size >= 0);

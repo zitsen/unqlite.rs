@@ -170,7 +170,7 @@ pub trait Wrap {
 
 impl Wrap for i32 {
     fn wrap(self) -> Result<()> {
-        Custom::from_raw(self).into()
+        Custom::from_raw(self)
     }
 }
 

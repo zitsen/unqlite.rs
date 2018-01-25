@@ -52,7 +52,7 @@ impl Jx9 for UnQLite {
 
 /// UnQLite Virtual Machine Object
 ///
-/// Wrapper for native [unqlite_vm](https://unqlite.org/c_api_object.html#unqlite_vm) structure,
+/// Wrapper for native [`unqlite_vm`](https://unqlite.org/c_api_object.html#unqlite_vm) structure,
 /// related [functions](https://unqlite.org/c_api_func.html)
 /// and [configuration](https://unqlite.org/c_api/unqlite_vm_config.html).
 pub struct UnQLiteVm {
@@ -269,7 +269,7 @@ impl UnQLiteVm {
     pub fn add_variable<T: Into<Vec<u8>>>(&mut self, name: T, value: Value) -> Result<()> {
         let value = self.new_variable(value)?;
         let name = Rc::new(CString::new(name).unwrap());
-        self.names.push(name.clone());
+        self.names.push(Rc::clone(&name));
         wrap_raw!(
             self,
             vm_config,
@@ -312,8 +312,8 @@ type Sender = mpsc::Sender<Vec<u8>>;
 type OutputCallback = extern "C" fn(*const c_void, u32, *mut c_void) -> i32;
 
 /// VM output consumer callback.
-/// Should return UNQLITE_ABORT or UNQLITE_OK.
-/// If UNQLITE_ABORT returned then the Jx9 program will be terminated at this point.
+/// Should return `UNQLITE_ABORT` or `UNQLITE_OK`.
+/// If `UNQLITE_ABORT` returned then the Jx9 program will be terminated at this point.
 extern "C" fn callback_to_channel(data: *const c_void, len: u32, sender: *mut c_void) -> i32 {
     let slice: &[u8] = unsafe { slice::from_raw_parts(data as *const u8, len as usize) };
     let sender: &Sender = unsafe { &*(sender as *mut Sender) };
@@ -321,6 +321,7 @@ extern "C" fn callback_to_channel(data: *const c_void, len: u32, sender: *mut c_
     let mut msg = Vec::with_capacity(len as usize);
     msg.extend_from_slice(slice);
 
+    #[allow(match_same_arms)]
     match sender.send(msg) {
         Ok(_) => UNQLITE_OK,
 
