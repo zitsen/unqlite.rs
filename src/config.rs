@@ -1,14 +1,13 @@
 use UnQLite;
 use error::Wrap;
-use ffi::constants::{UNQLITE_CONFIG_JX9_ERR_LOG, UNQLITE_CONFIG_DISABLE_AUTO_COMMIT,
-                     UNQLITE_CONFIG_ERR_LOG, UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_KV_ENGINE,
-                     UNQLITE_CONFIG_MAX_PAGE_CACHE};
 use ffi::unqlite_config;
 use libc::strlen;
 use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_char;
 use std::ptr;
+use vars::{UNQLITE_CONFIG_JX9_ERR_LOG, UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG,
+           UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE};
 
 /// A `Trait` for configuration.
 ///
@@ -152,7 +151,6 @@ fn from_chars_to_cstring(p: *mut c_char) -> CString {
 fn from_chars_to_string(p: *mut c_char) -> String {
     from_chars_to_cstring(p).into_string().unwrap()
 }
-
 
 #[cfg(test)]
 #[cfg(feature = "enable-threads")]

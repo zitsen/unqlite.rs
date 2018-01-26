@@ -1,7 +1,7 @@
-use ffi::constants::*;
 use std::error;
 use std::fmt;
 use std::result;
+use vars::*;
 
 /// Custom `Result` type.
 pub type Result<T> = result::Result<T, Error>;
@@ -155,16 +155,7 @@ impl From<i32> for ErrorKind {
 /// ```
 ///
 /// This should be nice for functional programming style.
-///
-/// NOTE: Do not use this trait out of the crate
-///
-/// TODO: [`pub_restricted` feature][rfc_1422] is for the case,
-/// but [rsutfmt] will cause a panic if we use it now,
-/// we would apply this feature after [rustfmt][rustfmt] support it.
-///
-/// [rfc_1422]: https://github.com/rust-lang/rfcs/blob/master/text/1422-pub-restricted.md
-/// [rustfmt]: https://github.com/rust-lang-nursery/rustfmt
-pub trait Wrap {
+pub(crate) trait Wrap {
     fn wrap(self) -> Result<()>;
 }
 
@@ -179,12 +170,10 @@ impl Custom {
         let kind = ErrorKind::from(result);
         match kind {
             ErrorKind::OK => Ok(()),
-            _ => Err(
-                Custom {
-                    kind: kind,
-                    raw: result,
-                }.into(),
-            ),
+            _ => Err(Custom {
+                kind: kind,
+                raw: result,
+            }.into()),
         }
     }
 

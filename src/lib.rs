@@ -78,13 +78,13 @@
 #![feature(concat_idents)]
 
 extern crate libc;
-extern crate unqlite_sys as ffi;
 
 #[cfg(test)]
 extern crate tempfile;
 
 pub use error::{Error, Result};
 use error::Wrap;
+
 use ffi::{unqlite_close, unqlite_open};
 use std::ffi::CString;
 use std::mem;
@@ -119,7 +119,6 @@ macro_rules! wrap {
     ($i: ident, $($e: expr),*) => (eval!($i, $($e),*).wrap());
 }
 
-
 macro_rules! wrap_raw {
     ($self_:ident, $i: ident) => (
         wrap!($i, $self_.as_raw_mut_ptr())
@@ -141,10 +140,8 @@ impl UnQLite {
         let mut db: *mut ::ffi::unqlite = unsafe { mem::uninitialized() };
         let filename = filename.as_ref();
         let filename = try!(CString::new(filename));
-        wrap!(open, &mut db, filename.as_ptr(), mode.into()).map(|_| {
-            UnQLite {
-                engine: unsafe { NonNull::new_unchecked(db) },
-            }
+        wrap!(open, &mut db, filename.as_ptr(), mode.into()).map(|_| UnQLite {
+            engine: unsafe { NonNull::new_unchecked(db) },
         })
     }
 
@@ -269,6 +266,11 @@ impl Drop for UnQLite {
         self.close().unwrap();
     }
 }
+
+#[allow(dead_code, non_snake_case, non_camel_case_types)]
+mod ffi;
+#[allow(dead_code)]
+mod vars;
 
 mod error;
 mod openmode;

@@ -8,10 +8,10 @@ use ffi::{unqlite_kv_append,
           unqlite_kv_fetch,
           unqlite_kv_fetch_callback,
           unqlite_kv_store};
-use ffi::constants::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr;
+use vars::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
 
 /// Key-Value Store Interface
 pub trait KV {

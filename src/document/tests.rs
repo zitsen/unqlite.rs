@@ -74,9 +74,8 @@ fn output_extract() {
     db.compile(prog)
         .and_then(|mut vm| {
             vm.exec().and_then(|_| {
-                vm.extract_output().map(|msg| {
-                    assert_eq!("hello world", String::from_utf8_lossy(msg))
-                })
+                vm.extract_output()
+                    .map(|msg| assert_eq!("hello world", String::from_utf8_lossy(msg)))
             })
         })
         .unwrap();

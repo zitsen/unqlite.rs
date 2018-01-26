@@ -3,10 +3,10 @@ use ffi::{unqlite_array_count, unqlite_array_walk, unqlite_value, unqlite_value_
           unqlite_value_is_json_object, unqlite_value_is_null, unqlite_value_is_string,
           unqlite_value_to_bool, unqlite_value_to_double, unqlite_value_to_string,
           unqlite_value_to_int64};
-use ffi::constants::{UNQLITE_ABORT, UNQLITE_OK};
 use std::collections::HashMap;
 use std::os::raw::{c_int, c_void};
 use std::slice;
+use vars::{UNQLITE_ABORT, UNQLITE_OK};
 
 /// Map of Values
 pub type Map = HashMap<String, Value>;
@@ -153,7 +153,7 @@ unsafe extern "C" fn map_walk(
     match both {
         Some((k, v)) => {
             (*collection).insert(k, v);
-            UNQLITE_OK
+            UNQLITE_OK as _
         }
         None => UNQLITE_ABORT,
     }

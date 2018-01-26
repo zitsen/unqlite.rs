@@ -1,18 +1,21 @@
 [package]
 name = "unqlite"
-version = "1.3.2"
+version = "1.4.0"
 authors = ["Huo Linhe <huolinhe@berrygenomics.com>"]
 license = "MIT/Apache-2.0"
 readme  = "README.md"
 homepage = "https://github.com/zitsen/unqlite.rs"
 repository = "https://github.com/zitsen/unqlite.rs.git"
-documentation = "http://zitsen.github.io/unqlite.rs"
+documentation = "https://docs.rs/unqlite"
 description = "Rust `unqlite` library wrapper."
 keywords = ["unqlite", "kv", "nosql"]
 
+[build-dependencies]
+bindgen = "0.32"
+cc = "1.0"
+
 [dependencies]
 libc = "0.2"
-unqlite-sys = "^1.1.0"
 
 [dev-dependencies]
 tempfile = "2.1.3"
@@ -20,9 +23,9 @@ tempfile = "2.1.3"
 [features]
 default = ["enable-threads"]
 # For thread-safe
-enable-threads = [ "unqlite-sys/enable-threads" ]
+enable-threads = []
 # Other features
-jx9-disable-builtin-func = [ "unqlite-sys/jx9-disable-builtin-func" ]
-jx9-enable-math-func = [ "unqlite-sys/jx9-enable-math-func" ]
-jx9-disable-disk-io = [ "unqlite-sys/jx9-disable-disk-io" ]
-enable-jx9-hash-io = [ "unqlite-sys/enable-jx9-hash-io" ]
+jx9-disable-builtin-func = []
+jx9-enable-math-func = []
+jx9-disable-disk-io = []
+enable-jx9-hash-io = []

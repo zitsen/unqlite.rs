@@ -5,10 +5,10 @@ use ffi::{unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_
           unqlite_kv_cursor_key, unqlite_kv_cursor_key_callback, unqlite_kv_cursor_last_entry,
           unqlite_kv_cursor_next_entry, unqlite_kv_cursor_prev_entry, unqlite_kv_cursor_release,
           unqlite_kv_cursor_reset, unqlite_kv_cursor_seek, unqlite_kv_cursor_valid_entry};
-use ffi::constants::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr::{self, NonNull};
+use vars::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
 
 /// Cursor iterator interfaces.
 ///
@@ -150,7 +150,6 @@ impl Entry {
         self.0.value_callback(func, data)
     }
 
-
     /// Goto next entry.
     ///
     /// Returns `None` if there's no valid cursors.
@@ -208,11 +207,9 @@ impl RawCursor {
     /// Opening Database Cursors
     pub fn init(unqlite: &UnQLite) -> Result<Self> {
         let mut cursor: *mut unqlite_kv_cursor = unsafe { mem::uninitialized() };
-        wrap!(init, unqlite.as_raw_mut_ptr(), &mut cursor).map(|_| {
-            RawCursor {
-                engine: unqlite.engine,
-                cursor: unsafe { NonNull::new_unchecked(cursor) },
-            }
+        wrap!(init, unqlite.as_raw_mut_ptr(), &mut cursor).map(|_| RawCursor {
+            engine: unqlite.engine,
+            cursor: unsafe { NonNull::new_unchecked(cursor) },
         })
     }
 
@@ -278,9 +275,8 @@ impl RawCursor {
 
         self.key_len().and_then(|mut len| {
             let ptr = unsafe { ::libc::malloc(len as _) };
-            wrap!(key, self.cursor(), ptr as _, &mut len).map(|_| unsafe {
-                Vec::from_raw_parts(ptr as _, len as _, len as _)
-            })
+            wrap!(key, self.cursor(), ptr as _, &mut len)
+                .map(|_| unsafe { Vec::from_raw_parts(ptr as _, len as _, len as _) })
         })
     }
 
@@ -297,9 +293,8 @@ impl RawCursor {
 
         self.value_len().and_then(|mut len| {
             let ptr = unsafe { ::libc::malloc(len as _) };
-            wrap!(data, self.cursor(), ptr as _, &mut len).map(|_| unsafe {
-                Vec::from_raw_parts(ptr as _, len as _, len as _)
-            })
+            wrap!(data, self.cursor(), ptr as _, &mut len)
+                .map(|_| unsafe { Vec::from_raw_parts(ptr as _, len as _, len as _) })
         })
     }
 
@@ -315,7 +310,6 @@ impl RawCursor {
         self.key()
             .and_then(|key| self.value().map(|value| (key, value)))
     }
-
 
     /// Deleting Records using Database Cursors
     pub fn delete(self) -> Result<Self> {

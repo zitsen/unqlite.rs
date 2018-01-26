@@ -50,11 +50,9 @@ pub fn load_mmaped_file<P: AsRef<Path>>(path: P) -> Result<Mmap> {
         ));
         unqlite_util_load_mmaped_file(cpath.as_ptr(), &mut ptr, &mut size)
             .wrap()
-            .map(|_| {
-                Mmap {
-                    ptr: ptr,
-                    size: size,
-                }
+            .map(|_| Mmap {
+                ptr: ptr,
+                size: size,
             })
     }
 }

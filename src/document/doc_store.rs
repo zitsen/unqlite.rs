@@ -6,11 +6,6 @@ use ffi::{unqlite_array_add_strkey_elem, unqlite_compile, unqlite_compile_file, 
           unqlite_vm, unqlite_vm_config, unqlite_vm_dump, unqlite_vm_exec,
           unqlite_vm_extract_variable, unqlite_vm_new_array, unqlite_vm_new_scalar,
           unqlite_vm_release, unqlite_vm_release_value, unqlite_vm_reset, unqlite_value_int64};
-use ffi::constants::{UNQLITE_OK, UNQLITE_VM_CONFIG_ARGV_ENTRY, UNQLITE_VM_CONFIG_CREATE_VAR,
-                     UNQLITE_VM_CONFIG_ENV_ATTR, UNQLITE_VM_CONFIG_ERR_REPORT,
-                     UNQLITE_VM_CONFIG_EXEC_VALUE, UNQLITE_VM_CONFIG_EXTRACT_OUTPUT,
-                     UNQLITE_VM_CONFIG_IMPORT_PATH, UNQLITE_VM_CONFIG_OUTPUT,
-                     UNQLITE_VM_CONFIG_RECURSION_DEPTH, UNQLITE_VM_OUTPUT_LENGTH};
 use std::cell::RefCell;
 use std::ffi::CString;
 use std::os::raw::c_void;
@@ -18,6 +13,10 @@ use std::ptr::{null, null_mut, NonNull};
 use std::rc::Rc;
 use std::slice;
 use std::sync::mpsc;
+use vars::{UNQLITE_OK, UNQLITE_VM_CONFIG_ARGV_ENTRY, UNQLITE_VM_CONFIG_CREATE_VAR,
+           UNQLITE_VM_CONFIG_ENV_ATTR, UNQLITE_VM_CONFIG_ERR_REPORT, UNQLITE_VM_CONFIG_EXEC_VALUE,
+           UNQLITE_VM_CONFIG_EXTRACT_OUTPUT, UNQLITE_VM_CONFIG_IMPORT_PATH,
+           UNQLITE_VM_CONFIG_OUTPUT, UNQLITE_VM_CONFIG_RECURSION_DEPTH, UNQLITE_VM_OUTPUT_LENGTH};
 
 /// Jx9 script compiler Interface.
 ///
@@ -148,9 +147,7 @@ impl UnQLiteVm {
             UNQLITE_VM_CONFIG_EXTRACT_OUTPUT,
             &ptr,
             &mut len
-        ).map(|_| unsafe {
-            slice::from_raw_parts(ptr as *const u8, len as usize)
-        })
+        ).map(|_| unsafe { slice::from_raw_parts(ptr as *const u8, len as usize) })
     }
 
     /// Return the total number of bytes that have been outputted by the Virtual Machine

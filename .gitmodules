@@ -1,0 +1,3 @@
+[submodule "unqlite"]
+	path = unqlite
+	url = https://github.com/symisc/unqlite.git
