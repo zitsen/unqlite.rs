@@ -1,3 +1,17 @@
+<a name="v1.4.0"></a>
+## v1.4.0 (2018-01-26)
+
+
+#### Bug Fixes
+
+* **util:**  warn use to not use `load_mmaped_file` ([ded1052e](ded1052e))
+
+#### Features
+
+*   deprecate unqlite-sys and reexport `ffi` and `vars` module ([86747446](86747446))
+
+
+
 <a name="v1.3.2"></a>
 ## v1.3.2 (2017-12-20)
 
