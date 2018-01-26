@@ -40,6 +40,8 @@ impl Util for UnQLite {
 }
 
 /// Load memory-mapped file so that we can save it to UnQLite
+///
+/// NOTE: DONOT USE: will throw unimplemented error.
 pub fn load_mmaped_file<P: AsRef<Path>>(path: P) -> Result<Mmap> {
     unsafe {
         let path = path.as_ref();
@@ -74,8 +76,6 @@ impl Drop for Mmap {
 mod tests {
     use super::*;
     use UnQLite;
-    use std::io::Write;
-    use tempfile::NamedTempFile;
 
     #[test]
     fn test_random_string() {
@@ -89,7 +89,10 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "mmap")]
     fn test_mmap() {
+        use std::io::Write;
+        use tempfile::NamedTempFile;
         let mut f = NamedTempFile::new().expect("get named temp file");
         let _ = f.write_all(b"Hello, world!");
         let _ = f.sync_all();
