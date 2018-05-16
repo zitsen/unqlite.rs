@@ -64,6 +64,13 @@ fn main() {
 }
 ```
 
+## Contributors
+
+- **@bemyak**
+- **@chritchens**
+- **@wolandr**
+- **@timlyo**
+
 [unqlite]: https://unqlite.org/index.html
 [travis-badge]: https://img.shields.io/travis/zitsen/unqlite.rs.svg?style=flat-square
 [travis]: https://travis-ci.org/zitsen/unqlite.rs

@@ -1,10 +1,9 @@
 [package]
 name = "unqlite"
 version = "1.4.1"
-authors = ["Huo Linhe <huolinhe@berrygenomics.com>"]
+authors = ["Huo Linhe <linhehuo@gmail.com>"]
 license = "MIT/Apache-2.0"
 readme  = "README.md"
-homepage = "https://github.com/zitsen/unqlite.rs"
 repository = "https://github.com/zitsen/unqlite.rs.git"
 documentation = "https://docs.rs/unqlite"
 description = "Rust `unqlite` library wrapper."
