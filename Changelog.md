@@ -1,3 +1,13 @@
+<a name="v1.4.1"></a>
+### v1.4.1 (2018-05-16)
+
+
+#### Features
+
+* **UnQLiteVm:**  Add Clone trait to UnQLiteVm ([53b977a4](53b977a4))
+
+
+
 <a name="v1.4.0"></a>
 ## v1.4.0 (2018-01-26)
 
