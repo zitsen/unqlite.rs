@@ -54,6 +54,7 @@ impl Jx9 for UnQLite {
 /// Wrapper for native [`unqlite_vm`](https://unqlite.org/c_api_object.html#unqlite_vm) structure,
 /// related [functions](https://unqlite.org/c_api_func.html)
 /// and [configuration](https://unqlite.org/c_api/unqlite_vm_config.html).
+#[derive(Clone)]
 pub struct UnQLiteVm {
     native: NonNull<unqlite_vm>,
     executed: bool,
