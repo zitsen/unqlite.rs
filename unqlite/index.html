@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `unqlite` crate."><meta name="keywords" content="rust, rustlang, rust-lang, unqlite"><title>unqlite - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate unqlite</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'unqlite', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>unqlite</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/unqlite/lib.rs.html#1-322' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>A high-level UnQLite database engine wrapper.</p>
+<p><a href="https://travis-ci.org/zitsen/unqlite.rs"><img src="https://img.shields.io/travis/zitsen/unqlite.rs.svg?style=flat-square" alt="travis-badge" /></a> <a href="https://crates.io/crates/unqlite"><img src="https://img.shields.io/crates/v/unqlite.svg?style=flat-square" alt="release-badge" /></a> <a href="https://crates.io/crates/unqlite"><img src="https://img.shields.io/crates/d/unqlite.svg?style=flat-square" alt="downloads" /></a>
+<a href="https://zitsen.github.io/unqlite.rs"><img src="https://img.shields.io/badge/API-docs-blue.svg?style=flat-square" alt="docs-badge" /></a> <a href="https://crates.io/crates/unqlite"><img src="https://img.shields.io/crates/l/unqlite.svg?style=flat-square" alt="license-badge" /></a></p>
+<p>NOTE: Some of the documents is stolen from <a href="https://unqlite.org/index.html">UnQLite Official Website</a>.</p>
+<h1 id="what-is-unqlite" class="section-header"><a href="#what-is-unqlite">What is UnQLite?</a></h1>
+<blockquote>
+</blockquote>
+<p>UnQLite is a software library which implements a <em>self-contained</em>, <em>serverless</em>,
+zero-configuration, transactional NoSQL database engine. UnQLite is a document store database
+similar to [MongoDB], [Redis], [CouchDB] etc. as well a standard Key/Value store similar to
+[BerkeleyDB], [LevelDB], etc.</p>
+<blockquote>
+</blockquote>
+<p>UnQLite is an embedded NoSQL (Key/Value store and Document-store) database engine. Unlike most
+other NoSQL databases, UnQLite does not have a separate server process. UnQLite reads and
+writes directly to ordinary disk files. A complete database with multiple collections, is
+contained in <strong>a single disk file</strong>. The database file format is cross-platform, you can freely
+copy a database between 32-bit and 64-bit systems or between big-endian and little-endian
+architectures.</p>
+<h1 id="port-to-rust" class="section-header"><a href="#port-to-rust">Port to Rust</a></h1>
+<p>This crate is high-level UnQLite database wrapper for Rust. A low-level bindings wrapper
+is avaliable as a seperated crate: <a href="https://crates.io/crates/unqlite-sys">unqlite-sys</a>.</p>
+<h1 id="usage" class="section-header"><a href="#usage">Usage</a></h1>
+<p>You can start with <code>UnQLite</code> constructors:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">unqlite</span>;
+
+<span class="kw">use</span> <span class="ident">unqlite</span>::{<span class="ident">UnQLite</span>, <span class="ident">Config</span>, <span class="ident">KV</span>, <span class="ident">Cursor</span>};
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="comment">// The database memory is not handled by Rust, and the database is on-disk,</span>
+    <span class="comment">// so `mut` is not neccessary.</span>
+    <span class="kw">let</span> <span class="ident">unqlite</span> <span class="op">=</span> <span class="ident">UnQLite</span>::<span class="ident">create_temp</span>();
+    <span class="comment">// Use any type that can use as `[u8]`</span>
+    <span class="ident">unqlite</span>.<span class="ident">kv_store</span>(<span class="string">&quot;key&quot;</span>, <span class="string">&quot;a long length value&quot;</span>).<span class="ident">unwrap</span>();
+    <span class="ident">unqlite</span>.<span class="ident">kv_store</span>(<span class="string">&quot;abc&quot;</span>, [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]).<span class="ident">unwrap</span>();
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entry</span> <span class="op">=</span> <span class="ident">unqlite</span>.<span class="ident">first</span>();
+    <span class="comment">// Iterate records</span>
+    <span class="kw">loop</span> {
+        <span class="kw">if</span> <span class="ident">entry</span>.<span class="ident">is_none</span>() { <span class="kw">break</span>; }
+
+        <span class="kw">let</span> <span class="ident">record</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">expect</span>(<span class="string">&quot;valid entry&quot;</span>);
+        <span class="kw">let</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="op">=</span> <span class="ident">record</span>.<span class="ident">key_value</span>();
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;* Go through {:?} --&gt; {:?}&quot;</span>, <span class="ident">key</span>, <span class="ident">value</span>);
+
+        <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">10</span> {
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;** Delete key {:?} by value length&quot;</span>, <span class="ident">key</span>);
+            <span class="ident">entry</span> <span class="op">=</span> <span class="ident">record</span>.<span class="ident">delete</span>();
+        } <span class="kw">else</span> {
+            <span class="ident">entry</span> <span class="op">=</span> <span class="ident">record</span>.<span class="ident">next</span>();
+        }
+    }
+    <span class="comment">//panic!(&quot;for test&quot;);</span>
+}</pre>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="document/index.html"
+                                  title='mod unqlite::document'>document</a></td>
+                           <td class='docblock-short'>
+                                <p>Document Store (JSON via Jx9) Interfaces.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ffi/index.html"
+                                  title='mod unqlite::ffi'>ffi</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="vars/index.html"
+                                  title='mod unqlite::vars'>vars</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Entry.html"
+                                  title='struct unqlite::Entry'>Entry</a></td>
+                           <td class='docblock-short'>
+                                <p>A valid cursor entry of record.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Mmap.html"
+                                  title='struct unqlite::Mmap'>Mmap</a></td>
+                           <td class='docblock-short'>
+                                <p>UnQLite hosted memory mapped file</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.UnQLite.html"
+                                  title='struct unqlite::UnQLite'>UnQLite</a></td>
+                           <td class='docblock-short'>
+                                <p>UnQLite database entry point.</p>
+
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.Direction.html"
+                                  title='enum unqlite::Direction'>Direction</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.Error.html"
+                                  title='enum unqlite::Error'>Error</a></td>
+                           <td class='docblock-short'>
+                                <p>Custom <code>Error</code> type.</p>
+
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Config.html"
+                                  title='trait unqlite::Config'>Config</a></td>
+                           <td class='docblock-short'>
+                                <p>A <code>Trait</code> for configuration.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Cursor.html"
+                                  title='trait unqlite::Cursor'>Cursor</a></td>
+                           <td class='docblock-short'>
+                                <p>Cursor iterator interfaces.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.KV.html"
+                                  title='trait unqlite::KV'>KV</a></td>
+                           <td class='docblock-short'>
+                                <p>Key-Value Store Interface</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Transaction.html"
+                                  title='trait unqlite::Transaction'>Transaction</a></td>
+                           <td class='docblock-short'>
+                                <p>Manual Transaction Manager</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Util.html"
+                                  title='trait unqlite::Util'>Util</a></td>
+                           <td class='docblock-short'>
+                                <p>Utility interfaces.</p>
+
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.load_mmaped_file.html"
+                                  title='fn unqlite::load_mmaped_file'>load_mmaped_file</a></td>
+                           <td class='docblock-short'>
+                                <p>Load memory-mapped file so that we can save it to UnQLite</p>
+
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="type" href="type.Result.html"
+                                  title='type unqlite::Result'>Result</a></td>
+                           <td class='docblock-short'>
+                                <p>Custom <code>Result</code> type.</p>
+
+                           </td>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "unqlite";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

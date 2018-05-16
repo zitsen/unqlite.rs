@@ -1,0 +1,842 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `vars` mod in crate `unqlite`."><meta name="keywords" content="rust, rustlang, rust-lang, vars"><title>unqlite::vars - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Module vars</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#constants">Constants</a></li></ul></div><p class='location'><a href='../index.html'>unqlite</a></p><script>window.sidebarCurrent = {name: 'vars', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>unqlite</a>::<wbr><a class="mod" href=''>vars</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/unqlite/vars.rs.html#3-123' title='goto source code'>[src]</a></span></h1><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_ABORT.html"
+                                  title='constant unqlite::vars::SXERR_ABORT'>SXERR_ABORT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_BIG.html"
+                                  title='constant unqlite::vars::SXERR_BIG'>SXERR_BIG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_BUSY.html"
+                                  title='constant unqlite::vars::SXERR_BUSY'>SXERR_BUSY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_CONTINUE.html"
+                                  title='constant unqlite::vars::SXERR_CONTINUE'>SXERR_CONTINUE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_CORRUPT.html"
+                                  title='constant unqlite::vars::SXERR_CORRUPT'>SXERR_CORRUPT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_DONE.html"
+                                  title='constant unqlite::vars::SXERR_DONE'>SXERR_DONE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_EMPTY.html"
+                                  title='constant unqlite::vars::SXERR_EMPTY'>SXERR_EMPTY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_EOF.html"
+                                  title='constant unqlite::vars::SXERR_EOF'>SXERR_EOF</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_EXISTS.html"
+                                  title='constant unqlite::vars::SXERR_EXISTS'>SXERR_EXISTS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_FORMAT.html"
+                                  title='constant unqlite::vars::SXERR_FORMAT'>SXERR_FORMAT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_IGNORE.html"
+                                  title='constant unqlite::vars::SXERR_IGNORE'>SXERR_IGNORE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_INVALID.html"
+                                  title='constant unqlite::vars::SXERR_INVALID'>SXERR_INVALID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_IO.html"
+                                  title='constant unqlite::vars::SXERR_IO'>SXERR_IO</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_LIMIT.html"
+                                  title='constant unqlite::vars::SXERR_LIMIT'>SXERR_LIMIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_LOCKED.html"
+                                  title='constant unqlite::vars::SXERR_LOCKED'>SXERR_LOCKED</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_MEM.html"
+                                  title='constant unqlite::vars::SXERR_MEM'>SXERR_MEM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_MORE.html"
+                                  title='constant unqlite::vars::SXERR_MORE'>SXERR_MORE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_NEXT.html"
+                                  title='constant unqlite::vars::SXERR_NEXT'>SXERR_NEXT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_NOMATCH.html"
+                                  title='constant unqlite::vars::SXERR_NOMATCH'>SXERR_NOMATCH</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_NOOP.html"
+                                  title='constant unqlite::vars::SXERR_NOOP'>SXERR_NOOP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_NOTFOUND.html"
+                                  title='constant unqlite::vars::SXERR_NOTFOUND'>SXERR_NOTFOUND</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_NOTIMPLEMENTED.html"
+                                  title='constant unqlite::vars::SXERR_NOTIMPLEMENTED'>SXERR_NOTIMPLEMENTED</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_ORANGE.html"
+                                  title='constant unqlite::vars::SXERR_ORANGE'>SXERR_ORANGE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_OS.html"
+                                  title='constant unqlite::vars::SXERR_OS'>SXERR_OS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_OVERFLOW.html"
+                                  title='constant unqlite::vars::SXERR_OVERFLOW'>SXERR_OVERFLOW</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_PATH.html"
+                                  title='constant unqlite::vars::SXERR_PATH'>SXERR_PATH</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_PERM.html"
+                                  title='constant unqlite::vars::SXERR_PERM'>SXERR_PERM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_RESET.html"
+                                  title='constant unqlite::vars::SXERR_RESET'>SXERR_RESET</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_RETRY.html"
+                                  title='constant unqlite::vars::SXERR_RETRY'>SXERR_RETRY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_SHORT.html"
+                                  title='constant unqlite::vars::SXERR_SHORT'>SXERR_SHORT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_SYNTAX.html"
+                                  title='constant unqlite::vars::SXERR_SYNTAX'>SXERR_SYNTAX</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_TIMEOUT.html"
+                                  title='constant unqlite::vars::SXERR_TIMEOUT'>SXERR_TIMEOUT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_UNKNOWN.html"
+                                  title='constant unqlite::vars::SXERR_UNKNOWN'>SXERR_UNKNOWN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXERR_WILLBLOCK.html"
+                                  title='constant unqlite::vars::SXERR_WILLBLOCK'>SXERR_WILLBLOCK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SXRET_OK.html"
+                                  title='constant unqlite::vars::SXRET_OK'>SXRET_OK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_ABORT.html"
+                                  title='constant unqlite::vars::UNQLITE_ABORT'>UNQLITE_ABORT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_ACCESS_EXISTS.html"
+                                  title='constant unqlite::vars::UNQLITE_ACCESS_EXISTS'>UNQLITE_ACCESS_EXISTS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_ACCESS_READ.html"
+                                  title='constant unqlite::vars::UNQLITE_ACCESS_READ'>UNQLITE_ACCESS_READ</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_ACCESS_READWRITE.html"
+                                  title='constant unqlite::vars::UNQLITE_ACCESS_READWRITE'>UNQLITE_ACCESS_READWRITE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_BUSY.html"
+                                  title='constant unqlite::vars::UNQLITE_BUSY'>UNQLITE_BUSY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CANTOPEN.html"
+                                  title='constant unqlite::vars::UNQLITE_CANTOPEN'>UNQLITE_CANTOPEN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_COMPILE_ERR.html"
+                                  title='constant unqlite::vars::UNQLITE_COMPILE_ERR'>UNQLITE_COMPILE_ERR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CONFIG_DISABLE_AUTO_COMMIT.html"
+                                  title='constant unqlite::vars::UNQLITE_CONFIG_DISABLE_AUTO_COMMIT'>UNQLITE_CONFIG_DISABLE_AUTO_COMMIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CONFIG_ERR_LOG.html"
+                                  title='constant unqlite::vars::UNQLITE_CONFIG_ERR_LOG'>UNQLITE_CONFIG_ERR_LOG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CONFIG_GET_KV_NAME.html"
+                                  title='constant unqlite::vars::UNQLITE_CONFIG_GET_KV_NAME'>UNQLITE_CONFIG_GET_KV_NAME</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CONFIG_JX9_ERR_LOG.html"
+                                  title='constant unqlite::vars::UNQLITE_CONFIG_JX9_ERR_LOG'>UNQLITE_CONFIG_JX9_ERR_LOG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CONFIG_KV_ENGINE.html"
+                                  title='constant unqlite::vars::UNQLITE_CONFIG_KV_ENGINE'>UNQLITE_CONFIG_KV_ENGINE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CONFIG_MAX_PAGE_CACHE.html"
+                                  title='constant unqlite::vars::UNQLITE_CONFIG_MAX_PAGE_CACHE'>UNQLITE_CONFIG_MAX_PAGE_CACHE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_COPYRIGHT.html"
+                                  title='constant unqlite::vars::UNQLITE_COPYRIGHT'>UNQLITE_COPYRIGHT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CORRUPT.html"
+                                  title='constant unqlite::vars::UNQLITE_CORRUPT'>UNQLITE_CORRUPT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CTX_ERR.html"
+                                  title='constant unqlite::vars::UNQLITE_CTX_ERR'>UNQLITE_CTX_ERR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CTX_NOTICE.html"
+                                  title='constant unqlite::vars::UNQLITE_CTX_NOTICE'>UNQLITE_CTX_NOTICE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CTX_WARNING.html"
+                                  title='constant unqlite::vars::UNQLITE_CTX_WARNING'>UNQLITE_CTX_WARNING</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CURSOR_MATCH_EXACT.html"
+                                  title='constant unqlite::vars::UNQLITE_CURSOR_MATCH_EXACT'>UNQLITE_CURSOR_MATCH_EXACT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CURSOR_MATCH_GE.html"
+                                  title='constant unqlite::vars::UNQLITE_CURSOR_MATCH_GE'>UNQLITE_CURSOR_MATCH_GE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_CURSOR_MATCH_LE.html"
+                                  title='constant unqlite::vars::UNQLITE_CURSOR_MATCH_LE'>UNQLITE_CURSOR_MATCH_LE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_DONE.html"
+                                  title='constant unqlite::vars::UNQLITE_DONE'>UNQLITE_DONE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_EMPTY.html"
+                                  title='constant unqlite::vars::UNQLITE_EMPTY'>UNQLITE_EMPTY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_EOF.html"
+                                  title='constant unqlite::vars::UNQLITE_EOF'>UNQLITE_EOF</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_EXISTS.html"
+                                  title='constant unqlite::vars::UNQLITE_EXISTS'>UNQLITE_EXISTS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_FULL.html"
+                                  title='constant unqlite::vars::UNQLITE_FULL'>UNQLITE_FULL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_IDENT.html"
+                                  title='constant unqlite::vars::UNQLITE_IDENT'>UNQLITE_IDENT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_INVALID.html"
+                                  title='constant unqlite::vars::UNQLITE_INVALID'>UNQLITE_INVALID</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_IOERR.html"
+                                  title='constant unqlite::vars::UNQLITE_IOERR'>UNQLITE_IOERR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_JOURNAL_FILE_SUFFIX.html"
+                                  title='constant unqlite::vars::UNQLITE_JOURNAL_FILE_SUFFIX'>UNQLITE_JOURNAL_FILE_SUFFIX</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_KV_CONFIG_CMP_FUNC.html"
+                                  title='constant unqlite::vars::UNQLITE_KV_CONFIG_CMP_FUNC'>UNQLITE_KV_CONFIG_CMP_FUNC</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_KV_CONFIG_HASH_FUNC.html"
+                                  title='constant unqlite::vars::UNQLITE_KV_CONFIG_HASH_FUNC'>UNQLITE_KV_CONFIG_HASH_FUNC</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_MEM_ERR_CALLBACK.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_MEM_ERR_CALLBACK'>UNQLITE_LIB_CONFIG_MEM_ERR_CALLBACK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_PAGE_SIZE.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_PAGE_SIZE'>UNQLITE_LIB_CONFIG_PAGE_SIZE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_STORAGE_ENGINE.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_STORAGE_ENGINE'>UNQLITE_LIB_CONFIG_STORAGE_ENGINE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI'>UNQLITE_LIB_CONFIG_THREAD_LEVEL_MULTI</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_THREAD_LEVEL_SINGLE.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_THREAD_LEVEL_SINGLE'>UNQLITE_LIB_CONFIG_THREAD_LEVEL_SINGLE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_USER_MALLOC.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_USER_MALLOC'>UNQLITE_LIB_CONFIG_USER_MALLOC</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_USER_MUTEX.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_USER_MUTEX'>UNQLITE_LIB_CONFIG_USER_MUTEX</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIB_CONFIG_VFS.html"
+                                  title='constant unqlite::vars::UNQLITE_LIB_CONFIG_VFS'>UNQLITE_LIB_CONFIG_VFS</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LIMIT.html"
+                                  title='constant unqlite::vars::UNQLITE_LIMIT'>UNQLITE_LIMIT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LOCKED.html"
+                                  title='constant unqlite::vars::UNQLITE_LOCKED'>UNQLITE_LOCKED</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LOCKERR.html"
+                                  title='constant unqlite::vars::UNQLITE_LOCKERR'>UNQLITE_LOCKERR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LOCK_EXCLUSIVE.html"
+                                  title='constant unqlite::vars::UNQLITE_LOCK_EXCLUSIVE'>UNQLITE_LOCK_EXCLUSIVE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LOCK_NONE.html"
+                                  title='constant unqlite::vars::UNQLITE_LOCK_NONE'>UNQLITE_LOCK_NONE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LOCK_PENDING.html"
+                                  title='constant unqlite::vars::UNQLITE_LOCK_PENDING'>UNQLITE_LOCK_PENDING</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LOCK_RESERVED.html"
+                                  title='constant unqlite::vars::UNQLITE_LOCK_RESERVED'>UNQLITE_LOCK_RESERVED</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_LOCK_SHARED.html"
+                                  title='constant unqlite::vars::UNQLITE_LOCK_SHARED'>UNQLITE_LOCK_SHARED</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_NOMEM.html"
+                                  title='constant unqlite::vars::UNQLITE_NOMEM'>UNQLITE_NOMEM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_NOOP.html"
+                                  title='constant unqlite::vars::UNQLITE_NOOP'>UNQLITE_NOOP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_NOTFOUND.html"
+                                  title='constant unqlite::vars::UNQLITE_NOTFOUND'>UNQLITE_NOTFOUND</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_NOTIMPLEMENTED.html"
+                                  title='constant unqlite::vars::UNQLITE_NOTIMPLEMENTED'>UNQLITE_NOTIMPLEMENTED</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OK.html"
+                                  title='constant unqlite::vars::UNQLITE_OK'>UNQLITE_OK</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_CREATE.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_CREATE'>UNQLITE_OPEN_CREATE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_EXCLUSIVE.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_EXCLUSIVE'>UNQLITE_OPEN_EXCLUSIVE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_IN_MEMORY.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_IN_MEMORY'>UNQLITE_OPEN_IN_MEMORY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_MMAP.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_MMAP'>UNQLITE_OPEN_MMAP</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_NOMUTEX.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_NOMUTEX'>UNQLITE_OPEN_NOMUTEX</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_OMIT_JOURNALING.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_OMIT_JOURNALING'>UNQLITE_OPEN_OMIT_JOURNALING</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_READONLY.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_READONLY'>UNQLITE_OPEN_READONLY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_READWRITE.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_READWRITE'>UNQLITE_OPEN_READWRITE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_OPEN_TEMP_DB.html"
+                                  title='constant unqlite::vars::UNQLITE_OPEN_TEMP_DB'>UNQLITE_OPEN_TEMP_DB</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_PERM.html"
+                                  title='constant unqlite::vars::UNQLITE_PERM'>UNQLITE_PERM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_READ_ONLY.html"
+                                  title='constant unqlite::vars::UNQLITE_READ_ONLY'>UNQLITE_READ_ONLY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_SIG.html"
+                                  title='constant unqlite::vars::UNQLITE_SIG'>UNQLITE_SIG</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_SYNC_DATAONLY.html"
+                                  title='constant unqlite::vars::UNQLITE_SYNC_DATAONLY'>UNQLITE_SYNC_DATAONLY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_SYNC_FULL.html"
+                                  title='constant unqlite::vars::UNQLITE_SYNC_FULL'>UNQLITE_SYNC_FULL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_SYNC_NORMAL.html"
+                                  title='constant unqlite::vars::UNQLITE_SYNC_NORMAL'>UNQLITE_SYNC_NORMAL</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_UNKNOWN.html"
+                                  title='constant unqlite::vars::UNQLITE_UNKNOWN'>UNQLITE_UNKNOWN</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VERSION.html"
+                                  title='constant unqlite::vars::UNQLITE_VERSION'>UNQLITE_VERSION</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VERSION_NUMBER.html"
+                                  title='constant unqlite::vars::UNQLITE_VERSION_NUMBER'>UNQLITE_VERSION_NUMBER</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_ARGV_ENTRY.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_ARGV_ENTRY'>UNQLITE_VM_CONFIG_ARGV_ENTRY</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_CREATE_VAR.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_CREATE_VAR'>UNQLITE_VM_CONFIG_CREATE_VAR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_ENV_ATTR.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_ENV_ATTR'>UNQLITE_VM_CONFIG_ENV_ATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_ERR_REPORT.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_ERR_REPORT'>UNQLITE_VM_CONFIG_ERR_REPORT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_EXEC_VALUE.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_EXEC_VALUE'>UNQLITE_VM_CONFIG_EXEC_VALUE</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_EXTRACT_OUTPUT.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_EXTRACT_OUTPUT'>UNQLITE_VM_CONFIG_EXTRACT_OUTPUT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_HTTP_REQUEST.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_HTTP_REQUEST'>UNQLITE_VM_CONFIG_HTTP_REQUEST</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_IMPORT_PATH.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_IMPORT_PATH'>UNQLITE_VM_CONFIG_IMPORT_PATH</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_IO_STREAM.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_IO_STREAM'>UNQLITE_VM_CONFIG_IO_STREAM</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_OUTPUT.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_OUTPUT'>UNQLITE_VM_CONFIG_OUTPUT</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_RECURSION_DEPTH.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_RECURSION_DEPTH'>UNQLITE_VM_CONFIG_RECURSION_DEPTH</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_CONFIG_SERVER_ATTR.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_CONFIG_SERVER_ATTR'>UNQLITE_VM_CONFIG_SERVER_ATTR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_ERR.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_ERR'>UNQLITE_VM_ERR</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UNQLITE_VM_OUTPUT_LENGTH.html"
+                                  title='constant unqlite::vars::UNQLITE_VM_OUTPUT_LENGTH'>UNQLITE_VM_OUTPUT_LENGTH</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "unqlite";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

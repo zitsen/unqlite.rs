@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Value","Represent all values that can be stored in a Jx9 variable. It is similar to JSON value."]],"struct":[["UnQLiteVm","UnQLite Virtual Machine Object"]],"trait":[["Jx9","Jx9 script compiler Interface."]],"type":[["Map","Map of Values"]]});
