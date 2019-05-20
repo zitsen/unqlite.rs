@@ -75,12 +75,13 @@
 //! [docs]: https://zitsen.github.io/unqlite.rs
 //! [license-badge]: https://img.shields.io/crates/l/unqlite.svg?style=flat-square
 
-#![feature(concat_idents)]
-
 extern crate libc;
 
 #[cfg(test)]
 extern crate tempfile;
+
+#[macro_use]
+extern crate paste;
 
 pub use error::{Error, Result};
 use error::Wrap;
@@ -110,7 +111,9 @@ pub struct UnQLite {
 macro_rules! eval {
     ($i: ident, $($e: expr),*) => (
         unsafe {
-            concat_idents!(unqlite_, $i)($($e),*)
+            paste::expr! {
+                [<unqlite_ $i>]($($e),*)
+            }
         }
     );
 }
