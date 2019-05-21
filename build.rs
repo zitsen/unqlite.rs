@@ -6,10 +6,6 @@ fn main() {
     // Configure and generate bindings.
     let bindings = builder()
         .header("unqlite/unqlite.h")
-        .with_codegen_config(bindgen::CodegenConfig {
-            vars: false,
-            ..Default::default()
-        })
         .generate()
         .expect("generate unqlite bindings");
     // Write the generated bindings to an output file.
