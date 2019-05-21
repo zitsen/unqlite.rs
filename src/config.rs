@@ -89,11 +89,12 @@ impl Config for UnQLite {
     }
 
     fn kv_engine<S: Into<Vec<u8>>>(self, name: S) -> Self {
+        let name = CString::new(name).expect("KV engine error").into_raw();
         wrap_raw!(
             self,
             config,
             UNQLITE_CONFIG_KV_ENGINE,
-            CString::new(name).expect("KV engine error").into_raw()
+            name
         ).expect("config KV engine");
         self
     }

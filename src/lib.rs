@@ -110,9 +110,12 @@ pub struct UnQLite {
 
 macro_rules! eval {
     ($i: ident, $($e: expr),*) => (
-        unsafe {
-            paste::expr! {
-                [<unqlite_ $i>]($($e),*)
+        loop {
+            match unsafe {
+                paste::expr! { [<unqlite_ $i>]($($e),*) }
+            } {
+                crate::vars::UNQLITE_LOCKED => {},
+                state => break state
             }
         }
     );
