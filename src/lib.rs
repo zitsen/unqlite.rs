@@ -79,8 +79,6 @@ extern crate libc;
 
 #[cfg(test)]
 extern crate tempfile;
-
-#[macro_use]
 extern crate paste;
 
 pub use error::{Error, Result};
