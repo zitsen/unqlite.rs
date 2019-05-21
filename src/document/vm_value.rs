@@ -1,8 +1,10 @@
-use ffi::{unqlite_array_count, unqlite_array_walk, unqlite_value, unqlite_value_is_bool,
-          unqlite_value_is_float, unqlite_value_is_int, unqlite_value_is_json_array,
-          unqlite_value_is_json_object, unqlite_value_is_null, unqlite_value_is_string,
-          unqlite_value_to_bool, unqlite_value_to_double, unqlite_value_to_string,
-          unqlite_value_to_int64};
+use ffi::{
+    unqlite_array_count, unqlite_array_walk, unqlite_value, unqlite_value_is_bool,
+    unqlite_value_is_float, unqlite_value_is_int, unqlite_value_is_json_array,
+    unqlite_value_is_json_object, unqlite_value_is_null, unqlite_value_is_string,
+    unqlite_value_to_bool, unqlite_value_to_double, unqlite_value_to_int64,
+    unqlite_value_to_string,
+};
 use std::collections::HashMap;
 use std::os::raw::{c_int, c_void};
 use std::slice;
@@ -37,7 +39,7 @@ impl Value {
 }
 
 macro_rules! declare_converter_to_ex {
-    ($march_type: pat, $some_x: expr, $to_type_rs: ty) => (
+    ($march_type: pat, $some_x: expr, $to_type_rs: ty) => {
         impl From<Value> for Option<$to_type_rs> {
             fn from(val: Value) -> Self {
                 match val {
@@ -46,11 +48,13 @@ macro_rules! declare_converter_to_ex {
                 }
             }
         }
-    )
+    };
 }
 
 macro_rules! declare_converter_to {
-    ($type: path, $to: ty) => (declare_converter_to_ex!($type(x), x, $to);)
+    ($type: path, $to: ty) => {
+        declare_converter_to_ex!($type(x), x, $to);
+    };
 }
 
 declare_converter_to_ex!(Value::Null, (), ());

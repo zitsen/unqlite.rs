@@ -1,14 +1,16 @@
-use UnQLite;
 use error::{Result, Wrap};
-use ffi::{unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_data_callback,
-          unqlite_kv_cursor_delete_entry, unqlite_kv_cursor_first_entry, unqlite_kv_cursor_init,
-          unqlite_kv_cursor_key, unqlite_kv_cursor_key_callback, unqlite_kv_cursor_last_entry,
-          unqlite_kv_cursor_next_entry, unqlite_kv_cursor_prev_entry, unqlite_kv_cursor_release,
-          unqlite_kv_cursor_reset, unqlite_kv_cursor_seek, unqlite_kv_cursor_valid_entry};
+use ffi::{
+    unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_data_callback,
+    unqlite_kv_cursor_delete_entry, unqlite_kv_cursor_first_entry, unqlite_kv_cursor_init,
+    unqlite_kv_cursor_key, unqlite_kv_cursor_key_callback, unqlite_kv_cursor_last_entry,
+    unqlite_kv_cursor_next_entry, unqlite_kv_cursor_prev_entry, unqlite_kv_cursor_release,
+    unqlite_kv_cursor_reset, unqlite_kv_cursor_seek, unqlite_kv_cursor_valid_entry,
+};
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr::{self, NonNull};
 use vars::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
+use UnQLite;
 
 /// Cursor iterator interfaces.
 ///
@@ -345,22 +347,24 @@ impl Drop for RawCursor {
 #[cfg(feature = "enable-threads")]
 mod tests {
     use super::*;
-    use {UnQLite, KV};
     use std::os::raw::c_void;
     use std::ptr;
+    use {UnQLite, KV};
 
     macro_rules! _test_assert_eq {
-        ($lhs:expr, ($rhs_0:expr, $rhs_1:expr)) => {
-            {
-                let kv = $lhs;
-                assert_eq!(
-                    (String::from_utf8(kv.0).unwrap(), String::from_utf8(kv.1).unwrap()),
-                    ($rhs_0.to_string(), $rhs_1.to_string()))
-            }
-        };
-        ($lhs:expr, $rhs:expr) => (
+        ($lhs:expr, ($rhs_0:expr, $rhs_1:expr)) => {{
+            let kv = $lhs;
+            assert_eq!(
+                (
+                    String::from_utf8(kv.0).unwrap(),
+                    String::from_utf8(kv.1).unwrap()
+                ),
+                ($rhs_0.to_string(), $rhs_1.to_string())
+            )
+        }};
+        ($lhs:expr, $rhs:expr) => {
             assert_eq!(String::from_utf8($lhs).unwrap(), $rhs.to_string())
-        );
+        };
     }
 
     #[no_mangle]

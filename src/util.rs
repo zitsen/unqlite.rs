@@ -1,11 +1,13 @@
-use UnQLite;
 use error::{Result, Wrap};
-use ffi::{unqlite_util_load_mmaped_file, unqlite_util_random_num, unqlite_util_random_string,
-          unqlite_util_release_mmaped_file};
+use ffi::{
+    unqlite_util_load_mmaped_file, unqlite_util_random_num, unqlite_util_random_string,
+    unqlite_util_release_mmaped_file,
+};
 use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_void;
 use std::path::Path;
+use UnQLite;
 
 /// Utility interfaces.
 pub trait Util {
@@ -28,8 +30,9 @@ impl Util for UnQLite {
                 self.as_raw_mut_ptr(),
                 vec.as_mut_ptr() as *mut i8,
                 buf_size,
-            ).wrap()
-                .unwrap();
+            )
+            .wrap()
+            .unwrap();
             vec
         }
     }

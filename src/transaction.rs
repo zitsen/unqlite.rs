@@ -1,6 +1,6 @@
-use UnQLite;
 use error::{Result, Wrap};
 use ffi::{unqlite_begin, unqlite_commit, unqlite_rollback};
+use UnQLite;
 
 /// Manual Transaction Manager
 ///

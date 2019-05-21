@@ -1,4 +1,3 @@
-use UnQLite;
 use error::Wrap;
 use ffi::unqlite_config;
 use libc::strlen;
@@ -6,8 +5,11 @@ use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_char;
 use std::ptr;
-use vars::{UNQLITE_CONFIG_JX9_ERR_LOG, UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG,
-           UNQLITE_CONFIG_GET_KV_NAME, UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE};
+use vars::{
+    UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG, UNQLITE_CONFIG_GET_KV_NAME,
+    UNQLITE_CONFIG_JX9_ERR_LOG, UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE,
+};
+use UnQLite;
 
 /// A `Trait` for configuration.
 ///
@@ -90,12 +92,7 @@ impl Config for UnQLite {
 
     fn kv_engine<S: Into<Vec<u8>>>(self, name: S) -> Self {
         let name = CString::new(name).expect("KV engine error").into_raw();
-        wrap_raw!(
-            self,
-            config,
-            UNQLITE_CONFIG_KV_ENGINE,
-            name
-        ).expect("config KV engine");
+        wrap_raw!(self, config, UNQLITE_CONFIG_KV_ENGINE, name).expect("config KV engine");
         self
     }
 

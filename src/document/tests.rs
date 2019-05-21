@@ -1,7 +1,7 @@
-use UnQLite;
-use document::{Map, Value};
 use document::Jx9;
+use document::{Map, Value};
 use std::thread;
+use UnQLite;
 
 // For view stdout of tests run:
 // cargo test document -- --nocapture
@@ -157,31 +157,32 @@ fn exec_result() {
     db.compile(
         "return {'key_one': 123, 'key_2': 'string_value', 'key_3': [1,2,3],
                'key_4': {'sub_key': 'sub_value', 'sub_key2': 42}, 'key_5': 1.2};",
-    ).map(|mut vm| {
-            vm.exec()
-                .map(|opt| opt.unwrap())
-                .map(|result| {
-                    let map: Option<Map> = result.into();
-                    assert!(map.is_some());
-                    if let Some(map) = map {
-                        assert_eq!(5, map.len());
-                        assert_eq!(Value::Int(123), map["key_one"]);
-                        let s: Option<String> = map["key_2"].clone().into();
-                        assert_eq!("string_value", s.unwrap());
-                        assert_eq!(
-                            Value::Array(vec![Value::Int(1), Value::Int(2), Value::Int(3)]),
-                            map["key_3"]
-                        );
-                        if let &Value::Object(ref sub_map) = &map["key_4"] {
-                            assert_eq!(Value::Int(42), sub_map["sub_key2"]);
-                        } else {
-                            assert!(false);
-                        }
+    )
+    .map(|mut vm| {
+        vm.exec()
+            .map(|opt| opt.unwrap())
+            .map(|result| {
+                let map: Option<Map> = result.into();
+                assert!(map.is_some());
+                if let Some(map) = map {
+                    assert_eq!(5, map.len());
+                    assert_eq!(Value::Int(123), map["key_one"]);
+                    let s: Option<String> = map["key_2"].clone().into();
+                    assert_eq!("string_value", s.unwrap());
+                    assert_eq!(
+                        Value::Array(vec![Value::Int(1), Value::Int(2), Value::Int(3)]),
+                        map["key_3"]
+                    );
+                    if let &Value::Object(ref sub_map) = &map["key_4"] {
+                        assert_eq!(Value::Int(42), sub_map["sub_key2"]);
+                    } else {
+                        assert!(false);
                     }
-                })
-                .unwrap()
-        })
-        .unwrap();
+                }
+            })
+            .unwrap()
+    })
+    .unwrap();
 }
 
 #[test]

@@ -106,7 +106,8 @@ pub enum ErrorKind {
     READ_ONLY,
     /// Locking protocol error
     LOCKERR,
-    #[doc(hidden)] __Nonexhaustive,
+    #[doc(hidden)]
+    __Nonexhaustive,
 }
 
 impl From<i32> for ErrorKind {
@@ -173,7 +174,8 @@ impl Custom {
             _ => Err(Custom {
                 kind: kind,
                 raw: result,
-            }.into()),
+            }
+            .into()),
         }
     }
 

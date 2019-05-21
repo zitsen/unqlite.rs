@@ -77,12 +77,12 @@
 
 extern crate libc;
 
+extern crate paste;
 #[cfg(test)]
 extern crate tempfile;
-extern crate paste;
 
-pub use error::{Error, Result};
 use error::Wrap;
+pub use error::{Error, Result};
 
 use ffi::{unqlite_close, unqlite_open};
 use std::ffi::CString;
@@ -276,14 +276,14 @@ pub mod ffi;
 #[allow(dead_code)]
 pub mod vars;
 
-mod error;
-mod openmode;
 mod config;
-mod util;
-mod transaction;
-mod kv_store;
-mod kv_cursor;
 pub mod document;
+mod error;
+mod kv_cursor;
+mod kv_store;
+mod openmode;
+mod transaction;
+mod util;
 
 pub use self::config::Config;
 pub use self::kv_cursor::*;

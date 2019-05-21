@@ -1,17 +1,19 @@
-use UnQLite;
 use error::{Result, Wrap};
-use ffi::{unqlite_kv_append,
-          unqlite_kv_config,
-          unqlite_kv_delete,
-          // unqlite_kv_store_fmt,
-          // unqlite_kv_append_fmt,
-          unqlite_kv_fetch,
-          unqlite_kv_fetch_callback,
-          unqlite_kv_store};
+use ffi::{
+    unqlite_kv_append,
+    unqlite_kv_config,
+    unqlite_kv_delete,
+    // unqlite_kv_store_fmt,
+    // unqlite_kv_append_fmt,
+    unqlite_kv_fetch,
+    unqlite_kv_fetch_callback,
+    unqlite_kv_store,
+};
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr;
 use vars::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
+use UnQLite;
 
 /// Key-Value Store Interface
 pub trait KV {
@@ -129,7 +131,8 @@ impl KV for UnQLite {
             key.len() as _,
             ptr::null_mut(),
             &mut len
-        ).map(|_| len)
+        )
+        .map(|_| len)
     }
 
     fn kv_fetch<K: AsRef<[u8]>>(&self, key: K) -> Result<Vec<u8>> {
@@ -146,7 +149,8 @@ impl KV for UnQLite {
             key.len() as _,
             ptr as _,
             &mut len
-        ).map(|_| unsafe { Vec::from_raw_parts(ptr, len as usize, cap) })
+        )
+        .map(|_| unsafe { Vec::from_raw_parts(ptr, len as usize, cap) })
     }
 
     fn kv_fetch_callback<K: AsRef<[u8]>>(
