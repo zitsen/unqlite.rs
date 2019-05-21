@@ -185,7 +185,9 @@ struct RawCursor {
 macro_rules! eval {
     ($i: ident, $($e: expr),*) => (
         unsafe {
-            concat_idents!(unqlite_kv_cursor_, $i)($($e),*)
+            paste::expr! {
+                [<unqlite_kv_cursor_ $i>]($($e),*)
+            }
         }
     );
 }
