@@ -1,3 +1,13 @@
+<a name="v1.4.2"></a>
+## v1.4.2 (2019-05-21)
+
+
+#### Bug Fixes
+
+* **tests:**  fix locked error in some multi-threading cases ([b40cc5ac](b40cc5ac))
+
+
+
 <a name="v1.4.1"></a>
 ### v1.4.1 (2018-05-16)
 
