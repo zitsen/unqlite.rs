@@ -1,6 +1,8 @@
 extern crate bindgen;
 extern crate cc;
 
+use std::env::var;
+use std::path::Path;
 fn main() {
     use bindgen::builder;
     // Configure and generate bindings.
@@ -10,7 +12,7 @@ fn main() {
         .expect("generate unqlite bindings");
     // Write the generated bindings to an output file.
     bindings
-        .write_to_file("src/ffi.rs")
+        .write_to_file(Path::new(&var("OUT_DIR").expect("OUT_DIR should be exist")).join("ffi.rs"))
         .expect("write to source file");
 
     cc::Build::new()
