@@ -1,3 +1,13 @@
+<a name="v1.4.3"></a>
+## v1.4.3 (2019-06-27)
+
+
+#### Bug Fixes
+
+*   use dyn for bare trait object warning in `Error` ([db9120f9](db9120f9))
+
+
+
 <a name="v1.4.2"></a>
 ## v1.4.2 (2019-05-21)
 
