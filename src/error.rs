@@ -12,7 +12,7 @@ pub enum Error {
     /// UnQLite error code map
     Custom(Custom),
     /// Any kind of other errors
-    Other(Box<error::Error>),
+    Other(Box<dyn error::Error>),
 }
 
 unsafe impl Send for Error {}
