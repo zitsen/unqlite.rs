@@ -39,15 +39,6 @@ impl fmt::Display for Error {
     }
 }
 
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        match *self {
-            Error::Custom(ref c) => c.description(),
-            Error::Other(ref e) => e.as_ref().description(),
-        }
-    }
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Custom {
     kind: ErrorKind,
