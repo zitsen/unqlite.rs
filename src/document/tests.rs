@@ -1,7 +1,7 @@
-use document::Jx9;
-use document::{Map, Value};
+use crate::document::Jx9;
+use crate::document::{Map, Value};
 use std::thread;
-use UnQLite;
+use crate::UnQLite;
 
 // For view stdout of tests run:
 // cargo test document -- --nocapture
