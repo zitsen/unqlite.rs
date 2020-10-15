@@ -1,5 +1,5 @@
-use error::{Result, Wrap};
-use ffi::{
+use crate::error::{Result, Wrap};
+use crate::ffi::{
     unqlite_util_load_mmaped_file, unqlite_util_random_num, unqlite_util_random_string,
     unqlite_util_release_mmaped_file,
 };
@@ -7,7 +7,7 @@ use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_void;
 use std::path::Path;
-use UnQLite;
+use crate::UnQLite;
 
 /// Utility interfaces.
 pub trait Util {

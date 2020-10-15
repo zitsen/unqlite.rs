@@ -1,15 +1,15 @@
-use error::Wrap;
-use ffi::unqlite_config;
+use crate::error::Wrap;
+use crate::ffi::unqlite_config;
 use libc::strlen;
 use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_char;
 use std::ptr;
-use vars::{
+use crate::vars::{
     UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG, UNQLITE_CONFIG_GET_KV_NAME,
     UNQLITE_CONFIG_JX9_ERR_LOG, UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE,
 };
-use UnQLite;
+use crate::UnQLite;
 
 /// A `Trait` for configuration.
 ///
@@ -154,7 +154,7 @@ fn from_chars_to_string(p: *mut c_char) -> String {
 #[cfg(feature = "enable-threads")]
 mod tests {
     use super::Config;
-    use UnQLite;
+    use crate::UnQLite;
     #[test]
     fn max_page_cache() {
         let unqlite = UnQLite::create_temp().max_page_cache(512000000);

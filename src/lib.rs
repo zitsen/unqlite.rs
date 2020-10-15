@@ -75,9 +75,6 @@
 //! [docs]: https://zitsen.github.io/unqlite.rs
 //! [license-badge]: https://img.shields.io/crates/l/unqlite.svg?style=flat-square
 
-extern crate libc;
-
-extern crate paste;
 #[cfg(test)]
 extern crate tempfile;
 
@@ -103,7 +100,7 @@ use std::ptr::NonNull;
 /// [`open_readonly`](#method.open_readonly) | Open the database in a read-only mode.
 ///
 pub struct UnQLite {
-    engine: NonNull<::ffi::unqlite>,
+    engine: NonNull<crate::ffi::unqlite>,
 }
 
 macro_rules! eval {
@@ -141,7 +138,7 @@ impl UnQLite {
     /// ```
     #[inline]
     fn open<P: AsRef<str>>(filename: P, mode: OpenMode) -> Result<UnQLite> {
-        let mut db: *mut ::ffi::unqlite = unsafe { mem::MaybeUninit::uninit().assume_init() };
+        let mut db: *mut crate::ffi::unqlite = unsafe { mem::MaybeUninit::uninit().assume_init() };
         let filename = filename.as_ref();
         let filename = CString::new(filename)?;
         wrap!(open, &mut db, filename.as_ptr(), mode.into()).map(|_| UnQLite {
@@ -257,7 +254,7 @@ impl UnQLite {
         wrap!(close, self.as_raw_mut_ptr())
     }
 
-    unsafe fn as_raw_mut_ptr(&self) -> *mut ::ffi::unqlite {
+    unsafe fn as_raw_mut_ptr(&self) -> *mut crate::ffi::unqlite {
         self.engine.as_ptr()
     }
 }

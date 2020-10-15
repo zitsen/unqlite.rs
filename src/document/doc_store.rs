@@ -1,6 +1,6 @@
 use super::vm_value::{to_value, Value};
-use error::{Result, Wrap};
-use ffi::{
+use crate::error::{Result, Wrap};
+use crate::ffi::{
     unqlite_array_add_strkey_elem, unqlite_compile, unqlite_compile_file, unqlite_value,
     unqlite_value_bool, unqlite_value_double, unqlite_value_int64, unqlite_value_null,
     unqlite_value_string, unqlite_vm, unqlite_vm_config, unqlite_vm_dump, unqlite_vm_exec,
@@ -14,13 +14,13 @@ use std::ptr::{null, null_mut, NonNull};
 use std::rc::Rc;
 use std::slice;
 use std::sync::mpsc;
-use vars::{
+use crate::vars::{
     UNQLITE_OK, UNQLITE_VM_CONFIG_ARGV_ENTRY, UNQLITE_VM_CONFIG_CREATE_VAR,
     UNQLITE_VM_CONFIG_ENV_ATTR, UNQLITE_VM_CONFIG_ERR_REPORT, UNQLITE_VM_CONFIG_EXEC_VALUE,
     UNQLITE_VM_CONFIG_EXTRACT_OUTPUT, UNQLITE_VM_CONFIG_IMPORT_PATH, UNQLITE_VM_CONFIG_OUTPUT,
     UNQLITE_VM_CONFIG_RECURSION_DEPTH, UNQLITE_VM_OUTPUT_LENGTH,
 };
-use UnQLite;
+use crate::UnQLite;
 
 /// Jx9 script compiler Interface.
 ///

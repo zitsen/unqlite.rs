@@ -1,7 +1,7 @@
 use std::error;
 use std::fmt;
 use std::result;
-use vars::*;
+use crate::vars::*;
 
 /// Custom `Result` type.
 pub type Result<T> = result::Result<T, Error>;
