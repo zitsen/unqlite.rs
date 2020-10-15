@@ -210,7 +210,7 @@ macro_rules! wrap_in_place {
 impl RawCursor {
     /// Opening Database Cursors
     pub fn init(unqlite: &UnQLite) -> Result<Self> {
-        let mut cursor: *mut unqlite_kv_cursor = unsafe { mem::uninitialized() };
+        let mut cursor: *mut unqlite_kv_cursor = unsafe { mem::MaybeUninit::uninit().assume_init() };
         wrap!(init, unqlite.as_raw_mut_ptr(), &mut cursor).map(|_| RawCursor {
             engine: unqlite.engine,
             cursor: unsafe { NonNull::new_unchecked(cursor) },

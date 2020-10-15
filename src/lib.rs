@@ -141,9 +141,9 @@ impl UnQLite {
     /// ```
     #[inline]
     fn open<P: AsRef<str>>(filename: P, mode: OpenMode) -> Result<UnQLite> {
-        let mut db: *mut ::ffi::unqlite = unsafe { mem::uninitialized() };
+        let mut db: *mut ::ffi::unqlite = unsafe { mem::MaybeUninit::uninit().assume_init() };
         let filename = filename.as_ref();
-        let filename = try!(CString::new(filename));
+        let filename = CString::new(filename)?;
         wrap!(open, &mut db, filename.as_ptr(), mode.into()).map(|_| UnQLite {
             engine: unsafe { NonNull::new_unchecked(db) },
         })

@@ -137,7 +137,7 @@ impl KV for UnQLite {
 
     fn kv_fetch<K: AsRef<[u8]>>(&self, key: K) -> Result<Vec<u8>> {
         let key = key.as_ref();
-        let mut len = try!(self.kv_fetch_length(key));
+        let mut len = self.kv_fetch_length(key)?;
         let mut buf: Vec<u8> = Vec::with_capacity(len as usize);
         let cap = buf.capacity();
         let ptr = buf.as_mut_ptr();

@@ -97,8 +97,8 @@ impl Config for UnQLite {
     }
 
     fn err_log(&self) -> Option<String> {
-        let log: *mut c_char = unsafe { mem::uninitialized() };
-        let len: i32 = unsafe { mem::uninitialized() };
+        let log: *mut c_char = unsafe { mem::MaybeUninit::uninit().assume_init() };
+        let len: i32 = unsafe { mem::MaybeUninit::uninit().assume_init() };
 
         wrap_raw!(self, config, UNQLITE_CONFIG_ERR_LOG, &log, &len)
             .ok()
@@ -112,8 +112,8 @@ impl Config for UnQLite {
     }
 
     fn jx9_err_log(&self) -> Option<String> {
-        let log: *mut c_char = unsafe { mem::uninitialized() };
-        let len: i32 = unsafe { mem::uninitialized() };
+        let log: *mut c_char = unsafe { mem::MaybeUninit::uninit().assume_init() };
+        let len: i32 = unsafe { mem::MaybeUninit::uninit().assume_init() };
         wrap_raw!(self, config, UNQLITE_CONFIG_JX9_ERR_LOG, &log, &len)
             .ok()
             .and_then(|_| {
@@ -126,7 +126,7 @@ impl Config for UnQLite {
     }
 
     fn kv_name(&self) -> String {
-        let kv_name: *mut c_char = unsafe { mem::uninitialized() };
+        let kv_name: *mut c_char = unsafe { mem::MaybeUninit::uninit().assume_init() };
 
         wrap_raw!(self, config, UNQLITE_CONFIG_GET_KV_NAME, &kv_name).unwrap();
         from_chars_to_string(kv_name)
