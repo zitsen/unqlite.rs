@@ -1,3 +1,13 @@
+<a name="v1.5.0"></a>
+## v1.5.0 (2020-10-16)
+
+
+#### Features
+
+*   remove deprecated functions and update to 2018 edition, thanks @dariusc93 ([441c36b0](441c36b0))
+
+
+
 <a name="v1.4.3"></a>
 ## v1.4.3 (2019-06-27)
 
