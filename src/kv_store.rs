@@ -1,5 +1,5 @@
-use error::{Result, Wrap};
-use ffi::{
+use crate::error::{Result, Wrap};
+use crate::ffi::{
     unqlite_kv_append,
     unqlite_kv_config,
     unqlite_kv_delete,
@@ -12,8 +12,8 @@ use ffi::{
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr;
-use vars::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
-use UnQLite;
+use crate::vars::{UNQLITE_KV_CONFIG_CMP_FUNC, UNQLITE_KV_CONFIG_HASH_FUNC};
+use crate::UnQLite;
 
 /// Key-Value Store Interface
 pub trait KV {
@@ -137,7 +137,7 @@ impl KV for UnQLite {
 
     fn kv_fetch<K: AsRef<[u8]>>(&self, key: K) -> Result<Vec<u8>> {
         let key = key.as_ref();
-        let mut len = try!(self.kv_fetch_length(key));
+        let mut len = self.kv_fetch_length(key)?;
         let mut buf: Vec<u8> = Vec::with_capacity(len as usize);
         let cap = buf.capacity();
         let ptr = buf.as_mut_ptr();
@@ -195,7 +195,7 @@ impl KV for UnQLite {
 #[cfg(feature = "enable-threads")]
 mod tests {
     use super::KV;
-    use UnQLite;
+    use crate::UnQLite;
 
     #[test]
     fn test_kv_store() {

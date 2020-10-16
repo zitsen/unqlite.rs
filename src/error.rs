@@ -1,7 +1,7 @@
 use std::error;
 use std::fmt;
 use std::result;
-use vars::*;
+use crate::vars::*;
 
 /// Custom `Result` type.
 pub type Result<T> = result::Result<T, Error>;
@@ -35,15 +35,6 @@ impl fmt::Display for Error {
         match *self {
             Error::Custom(ref c) => write!(f, "Custom error: {}", c),
             Error::Other(ref e) => write!(f, "Other error: {}", e),
-        }
-    }
-}
-
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        match *self {
-            Error::Custom(ref c) => c.description(),
-            Error::Other(ref e) => e.as_ref().description(),
         }
     }
 }

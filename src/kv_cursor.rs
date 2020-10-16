@@ -1,5 +1,5 @@
-use error::{Result, Wrap};
-use ffi::{
+use crate::error::{Result, Wrap};
+use crate::ffi::{
     unqlite, unqlite_kv_cursor, unqlite_kv_cursor_data, unqlite_kv_cursor_data_callback,
     unqlite_kv_cursor_delete_entry, unqlite_kv_cursor_first_entry, unqlite_kv_cursor_init,
     unqlite_kv_cursor_key, unqlite_kv_cursor_key_callback, unqlite_kv_cursor_last_entry,
@@ -9,8 +9,8 @@ use ffi::{
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr::{self, NonNull};
-use vars::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
-use UnQLite;
+use crate::vars::{UNQLITE_CURSOR_MATCH_EXACT, UNQLITE_CURSOR_MATCH_GE, UNQLITE_CURSOR_MATCH_LE};
+use crate::UnQLite;
 
 /// Cursor iterator interfaces.
 ///
@@ -210,7 +210,7 @@ macro_rules! wrap_in_place {
 impl RawCursor {
     /// Opening Database Cursors
     pub fn init(unqlite: &UnQLite) -> Result<Self> {
-        let mut cursor: *mut unqlite_kv_cursor = unsafe { mem::uninitialized() };
+        let mut cursor: *mut unqlite_kv_cursor = unsafe { mem::MaybeUninit::uninit().assume_init() };
         wrap!(init, unqlite.as_raw_mut_ptr(), &mut cursor).map(|_| RawCursor {
             engine: unqlite.engine,
             cursor: unsafe { NonNull::new_unchecked(cursor) },
@@ -349,7 +349,7 @@ mod tests {
     use super::*;
     use std::os::raw::c_void;
     use std::ptr;
-    use {UnQLite, KV};
+    use crate::{UnQLite, KV};
 
     macro_rules! _test_assert_eq {
         ($lhs:expr, ($rhs_0:expr, $rhs_1:expr)) => {{

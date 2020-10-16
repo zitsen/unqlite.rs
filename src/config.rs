@@ -1,15 +1,15 @@
-use error::Wrap;
-use ffi::unqlite_config;
+use crate::error::Wrap;
+use crate::ffi::unqlite_config;
 use libc::strlen;
 use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_char;
 use std::ptr;
-use vars::{
+use crate::vars::{
     UNQLITE_CONFIG_DISABLE_AUTO_COMMIT, UNQLITE_CONFIG_ERR_LOG, UNQLITE_CONFIG_GET_KV_NAME,
     UNQLITE_CONFIG_JX9_ERR_LOG, UNQLITE_CONFIG_KV_ENGINE, UNQLITE_CONFIG_MAX_PAGE_CACHE,
 };
-use UnQLite;
+use crate::UnQLite;
 
 /// A `Trait` for configuration.
 ///
@@ -97,8 +97,8 @@ impl Config for UnQLite {
     }
 
     fn err_log(&self) -> Option<String> {
-        let log: *mut c_char = unsafe { mem::uninitialized() };
-        let len: i32 = unsafe { mem::uninitialized() };
+        let log: *mut c_char = unsafe { mem::MaybeUninit::uninit().assume_init() };
+        let len: i32 = unsafe { mem::MaybeUninit::uninit().assume_init() };
 
         wrap_raw!(self, config, UNQLITE_CONFIG_ERR_LOG, &log, &len)
             .ok()
@@ -112,8 +112,8 @@ impl Config for UnQLite {
     }
 
     fn jx9_err_log(&self) -> Option<String> {
-        let log: *mut c_char = unsafe { mem::uninitialized() };
-        let len: i32 = unsafe { mem::uninitialized() };
+        let log: *mut c_char = unsafe { mem::MaybeUninit::uninit().assume_init() };
+        let len: i32 = unsafe { mem::MaybeUninit::uninit().assume_init() };
         wrap_raw!(self, config, UNQLITE_CONFIG_JX9_ERR_LOG, &log, &len)
             .ok()
             .and_then(|_| {
@@ -126,7 +126,7 @@ impl Config for UnQLite {
     }
 
     fn kv_name(&self) -> String {
-        let kv_name: *mut c_char = unsafe { mem::uninitialized() };
+        let kv_name: *mut c_char = unsafe { mem::MaybeUninit::uninit().assume_init() };
 
         wrap_raw!(self, config, UNQLITE_CONFIG_GET_KV_NAME, &kv_name).unwrap();
         from_chars_to_string(kv_name)
@@ -154,7 +154,7 @@ fn from_chars_to_string(p: *mut c_char) -> String {
 #[cfg(feature = "enable-threads")]
 mod tests {
     use super::Config;
-    use UnQLite;
+    use crate::UnQLite;
     #[test]
     fn max_page_cache() {
         let unqlite = UnQLite::create_temp().max_page_cache(512000000);

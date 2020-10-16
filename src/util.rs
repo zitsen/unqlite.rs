@@ -1,5 +1,5 @@
-use error::{Result, Wrap};
-use ffi::{
+use crate::error::{Result, Wrap};
+use crate::ffi::{
     unqlite_util_load_mmaped_file, unqlite_util_random_num, unqlite_util_random_string,
     unqlite_util_release_mmaped_file,
 };
@@ -7,7 +7,7 @@ use std::ffi::CString;
 use std::mem;
 use std::os::raw::c_void;
 use std::path::Path;
-use UnQLite;
+use crate::UnQLite;
 
 /// Utility interfaces.
 pub trait Util {
@@ -48,11 +48,11 @@ impl Util for UnQLite {
 pub fn load_mmaped_file<P: AsRef<Path>>(path: P) -> Result<Mmap> {
     unsafe {
         let path = path.as_ref();
-        let mut ptr: *mut c_void = mem::uninitialized();
+        let mut ptr: *mut c_void = mem::MaybeUninit::uninit().assume_init();
         let mut size: i64 = 0;
-        let cpath = try!(CString::new(
+        let cpath = CString::new(
             path.to_str().expect("cannot convert the path to str")
-        ));
+        )?;
         unqlite_util_load_mmaped_file(cpath.as_ptr(), &mut ptr, &mut size)
             .wrap()
             .map(|_| Mmap {

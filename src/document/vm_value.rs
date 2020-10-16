@@ -1,4 +1,4 @@
-use ffi::{
+use crate::ffi::{
     unqlite_array_count, unqlite_array_walk, unqlite_value, unqlite_value_is_bool,
     unqlite_value_is_float, unqlite_value_is_int, unqlite_value_is_json_array,
     unqlite_value_is_json_object, unqlite_value_is_null, unqlite_value_is_string,
@@ -8,7 +8,7 @@ use ffi::{
 use std::collections::HashMap;
 use std::os::raw::{c_int, c_void};
 use std::slice;
-use vars::{UNQLITE_ABORT, UNQLITE_OK};
+use crate::vars::{UNQLITE_ABORT, UNQLITE_OK};
 
 /// Map of Values
 pub type Map = HashMap<String, Value>;
