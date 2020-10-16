@@ -70,6 +70,7 @@ fn main() {
 - **@chritchens**
 - **@wolandr**
 - **@timlyo**
+- **@dariusc93**
 
 [unqlite]: https://unqlite.org/index.html
 [travis-badge]: https://img.shields.io/travis/zitsen/unqlite.rs.svg?style=flat-square
