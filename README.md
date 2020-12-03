@@ -25,7 +25,7 @@ architectures.
 ## Port to Rust
 
 This crate is high-level UnQLite database wrapper for Rust. A low-level bindings wrapper
-is avaliable as a seperated crate: [unqlite-sys](https://crates.io/crates/unqlite-sys).
+is available as a seperated crate: [unqlite-sys](https://crates.io/crates/unqlite-sys).
 
 ## Usage
 
